@@ -32,7 +32,6 @@ a {
   overflow: auto;
 
   .content {
-  border: 1px solid red;
   flex: 1;
   }
 }

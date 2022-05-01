@@ -1,19 +1,19 @@
 <template>
     <div class="nav">
       <div class="nav-icon">
-      <router-link to="/money" class="item">
+      <router-link to="/money" class="item" active-class="selected">
       <svg><use xlink:href="#money"></use></svg>
       <div class="text">账本</div>
       </router-link>
       </div>
       <div class="nav-icon">
-      <router-link to="/labels" class="item">
+      <router-link to="/labels" class="item" active-class="selected">
       <svg><use xlink:href="#labels"></use></svg>
       <div class="text">标签</div>
       </router-link>
       </div>
       <div class="nav-icon">
-      <router-link to="/statistics" class="item">
+      <router-link to="/statistics" class="item" active-class="selected">
       <svg><use xlink:href="#statistics"></use></svg>
       <div class="text">统计</div>
       </router-link>
@@ -41,15 +41,17 @@
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
+  caret-color: transparent;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6);
 
   .nav-icon {
-    border: 1px solid black;
     margin-left: 10px;
     margin-right: 10px;
     flex: 1;
     .item {
       display: block;
       padding: 6px 0;
+      color: #888;
     }
     .text {
       padding-top: 4px;
@@ -57,11 +59,17 @@
     }
   }
   svg {
-    width: 4rem;
-    height: 4rem;
-    vertical-align: -0.6rem;
-    fill: #666;
+    width: 3rem;
+    height: 3rem;
+    vertical-align: -0.45rem;
+    fill: #888;
     overflow: hidden;
+  }
+  .item.selected {
+    color: #333;
+    > svg {
+      fill: #333;
+    }
   }
 }
 </style>
