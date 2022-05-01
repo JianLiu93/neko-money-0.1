@@ -3,11 +3,16 @@ import App from './App.vue'
 import './registerServiceWorker'
 import router from './router'
 import store from './store'
+import Nav from '@/components/Nav.vue'
+import Wrapper from '@/components/Wrapper.vue'
 
 Vue.config.productionTip = false
 
+Vue.component('Nav', Nav)
+Vue.component('Wrapper', Wrapper)
+
 new Vue({
-  router,
+  router: router,
   store,
   render: h => h(App)
 }).$mount('#app')
