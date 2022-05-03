@@ -13,7 +13,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  }
+}
 a {
   color: inherit;
   text-decoration: none;
@@ -26,7 +26,7 @@ a {
   color: #333;
 }
 .wrapper {
-  height: 100vh;
+  height: 96vh;
   display: flex;
   flex-direction: column;
   overflow: auto;
@@ -36,9 +36,9 @@ a {
   }
 }
 
-#nav {
-  padding: 30px;
-}
+// #nav {
+//   padding: 30px;
+// }
 </style>
 <script lang="ts">
 

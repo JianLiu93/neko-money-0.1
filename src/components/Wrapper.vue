@@ -1,8 +1,8 @@
 <template>
 	<div class="wrapper">
-		<div class="content">
+		<section class="content">
 			<slot></slot>
-		</div>
+		</section>
 		<Nav />
 	</div>
 </template>
