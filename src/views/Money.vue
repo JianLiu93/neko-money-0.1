@@ -1,18 +1,7 @@
 <template>
   <div>
     <wrapper>
-	<div class="tags">
-      <ul class="tag-list">
-		<li class="current">衣装</li>
-		<li>美食</li>
-		<li>住宿</li>
-		<li>出行</li>
-		<li>网络</li>
-      </ul>
-      <div class="new">
-		<button>新增标签</button>
-      </div>
-	</div>
+	<Tags :data-tags.sync="tags" />
 	<Notes />
 	<Types />
 	<Calculator />
@@ -24,10 +13,16 @@
 	import Types from '@/components/Types.vue'
 	import Calculator from '@/components/Calculator.vue'
 	import Notes from '@/components/Notes.vue'
+	import Tags from '@/components/Tags.vue'
 
 	export default {
 		name: 'Money',
-		components: { Types, Calculator, Notes },
+		components: { Tags, Notes, Types, Calculator },
+		data(): unknown {
+			return {
+				tags: ['美食', '住宿', '出行', '娱乐'],
+			}
+		}
 	}
 </script>
 
