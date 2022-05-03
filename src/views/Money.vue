@@ -13,13 +13,7 @@
 		<button>新增标签</button>
       </div>
 	</div>
-
-      <div class="remark">
-		<label for="">
-			<span>备注</span>
-			<input type="text" />
-		</label>
-      </div>
+	<Notes />
 	<Types />
 	<Calculator />
     </wrapper>
@@ -29,10 +23,11 @@
 <script lang="ts">
 	import Types from '@/components/Types.vue'
 	import Calculator from '@/components/Calculator.vue'
+	import Notes from '@/components/Notes.vue'
 
 	export default {
 		name: 'Money',
-		components: {Types, Calculator},		
+		components: { Types, Calculator, Notes },
 	}
 </script>
 
