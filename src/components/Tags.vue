@@ -8,7 +8,6 @@
 		:class="selectedTag === tag ? 'selected':''"
 		@click="toggle(tag)">{{tag}}</li>
       </ul>
-
 	</div>
 </template>
 
@@ -18,15 +17,17 @@
 
 	@Component
 	export default class Tags extends Vue {
-		@Prop(Array) readonly dataTags: string[] | undefined;
+		@Prop(Array) readonly dataTags!: string[];
 		
 		selectedTag = '';
+
 		toggle(tag: string): void {
 			if(this.selectedTag === tag) {
 				this.selectedTag = '';
 			} else {
 				this.selectedTag = tag;
 			}
+			this.$emit('update:tag', this.selectedTag);
 		}
 		newTag(): void {
 			const name = window.prompt('请输入新标签名');

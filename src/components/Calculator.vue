@@ -66,7 +66,7 @@
 			return;
 		}
 		ok() :void {
-			console.log(this.output);
+			this.$emit('update:sum', this.output);
 		}
 	}
 </script>

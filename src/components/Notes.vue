@@ -2,10 +2,10 @@
 	<div class="noteBar">
 	<label for="" class="notes">
 		<span>备注</span>
-		<input type="text" :note="note"
-		@input="inputNote($event)"
+		<input type="text"
+		v-model="note"
 		placeholder="请在这里输入简要备注">
-		<button @click="print()">确定</button>
+		<button @click="submit">确定</button>
 	</label>
 	</div>
 </template>
@@ -17,11 +17,9 @@
 	@Component
 	export default class Notes extends Vue {
 		note = '';
-		inputNote(e: { target: HTMLInputElement }) :void {
-				this.note = e.target.value;
-		}
-		print(): void {
-			console.log(this.note);
+
+		submit(): void {
+			this.$emit('update:note', this.note);
 		}
 	}
 </script>
