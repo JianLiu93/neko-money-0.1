@@ -67,6 +67,8 @@
 		}
 		ok() :void {
 			this.$emit('update:sum', this.output);
+			this.$emit('submit', this.output);
+			this.output = '0';
 		}
 	}
 </script>
