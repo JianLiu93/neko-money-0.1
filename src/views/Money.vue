@@ -17,15 +17,9 @@
 	import Notes from '@/components/Notes.vue'
 	import Types from '@/components/Types.vue'
 	import Calculator from '@/components/Calculator.vue'
+	import { model } from '@/model'
 
-	type Record = {
-		tag: string
-		note: string
-		type: string
-		sum: number
-		createdAt?: Date  //类
-	}
-	const recordList: Record[] = JSON.parse(window.localStorage.getItem('recordList') || '[]');
+	const recordList: RecordData[] =  model.fetch();
 
 	@Component({
 		components: { Tags, Notes, Types, Calculator },
@@ -33,10 +27,10 @@
 	export default class Money extends Vue {
 		tags = ['美食', '住宿', '出行', '娱乐'];
 
-		record: Record = {
+		record: RecordData = {
 			tag:'', note:'', type: '-', sum: 0
 		}
-		recordList: Record[] = recordList;
+		recordList: RecordData[] = recordList;
 
 		onUpdateTag (tag: string): void {
 			this.record.tag = tag;
@@ -51,14 +45,14 @@
 			this.record.sum = parseFloat(value);
 		}
 		saveRecord(): void {
-			let copyRecord: Record = JSON.parse(JSON.stringify(this.record));
+			const copyRecord: RecordData = model.clone(this.record);
 			copyRecord.createdAt = new Date();
 			this.recordList.push(copyRecord);
 		}
 
 		@Watch('recordList')
 		onRecordListChange(): void {
-			window.localStorage.setItem('recordList', JSON.stringify(this.recordList))
+			model.save(this.recordList);
 		}
 	}
 </script>
