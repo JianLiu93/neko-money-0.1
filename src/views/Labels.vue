@@ -1,7 +1,7 @@
 <template>
 	<wrapper>
 		<ul class="tags">
-			<li v-for="tag in tags" :key="tag">{{tag}}</li>
+			<li v-for="tag in tags" :key="tag.id">{{tag.name}}</li>
 		</ul>
 		<div class="buttonWrapper">
 			<button @click="createTag" class="createTag">新建标签</button>

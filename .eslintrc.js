@@ -16,7 +16,11 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     '@typescript-eslint/no-var-requires': 0
   },
-  globals: { "RecordData": true },
+  globals: {
+    "RecordData": true,
+    "Tag": true,
+    "tagsModel": true,
+  },
   overrides: [
     {
       files: [

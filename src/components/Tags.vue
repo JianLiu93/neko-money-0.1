@@ -4,9 +4,9 @@
 		<button @click="newTag">新增标签</button>
       </div>
       <ul class="tag-list">
-		<li v-for="tag in dataTags" :key="tag"
-		:class="selectedTag === tag ? 'selected':''"
-		@click="toggle(tag)">{{tag}}</li>
+		<li v-for="tag in dataTags" :key="tag.id"
+		:class="selectedTag === tag.name ? 'selected':''"
+		@click="toggle(tag)">{{tag.name}}</li>
       </ul>
 	</div>
 </template>
@@ -18,15 +18,15 @@
 
 	@Component
 	export default class Tags extends Vue {
-		@Prop(Array) readonly dataTags!: string[];
+		@Prop(Array) readonly dataTags!: Tag[];
 		
 		selectedTag = '';
 
-		toggle(tag: string): void {
-			if(this.selectedTag === tag) {
+		toggle(tag: Tag): void {
+			if(this.selectedTag === tag.name) {
 				this.selectedTag = '';
 			} else {
-				this.selectedTag = tag;
+				this.selectedTag = tag.name;
 			}
 			this.$emit('update:tag', this.selectedTag);
 		}
@@ -35,9 +35,8 @@
 			if(!name) {
 				window.alert('标签为空！');
 			} else if(this.dataTags) {
-				this.$emit('update:dataTags', [...this.dataTags, name]);
-				tagsModel.data = [...this.dataTags, name] as string[];
-				tagsModel.save();
+				this.$emit('update:dataTags', [...this.dataTags, {id: name, name: name}]);
+				tagsModel.create(name);
 			}
 		}
 

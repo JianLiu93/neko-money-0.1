@@ -21,7 +21,6 @@
 	import { tagsModel } from '@/models/tagsModel'
 
 	const recordList: RecordData[] =  model.fetch('recordList');
-	const tagBasic: string[] = ['美食', '住宿', '出行', '衣妆', '娱乐'];
 	
 	@Component({
 		components: { Tags, Notes, Types, Calculator },
