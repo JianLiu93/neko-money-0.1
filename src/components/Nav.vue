@@ -2,19 +2,22 @@
     <div class="nav">
       <div class="nav-icon">
       <router-link to="/money" class="item" active-class="selected">
-      <svg><use xlink:href="#money"></use></svg>
+      <!-- <svg><use xlink:href="#money"></use></svg> -->
+      <Icon name="money" />
       <div class="text">账本</div>
       </router-link>
       </div>
       <div class="nav-icon">
       <router-link to="/labels" class="item" active-class="selected">
-      <svg><use xlink:href="#labels"></use></svg>
+      <!-- <svg><use xlink:href="#labels"></use></svg> -->
+      <Icon name="labels" />
       <div class="text">标签</div>
       </router-link>
       </div>
       <div class="nav-icon">
       <router-link to="/statistics" class="item" active-class="selected">
-      <svg><use xlink:href="#statistics"></use></svg>
+      <!-- <svg><use xlink:href="#statistics"></use></svg> -->
+      <Icon name="statistics" />
       <div class="text">统计</div>
       </router-link>
       </div>

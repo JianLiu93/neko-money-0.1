@@ -1,7 +1,11 @@
 <template>
 	<wrapper>
 		<ul class="tags">
-			<li v-for="tag in tags" :key="tag.id">{{tag.name}}</li>
+			<li v-for="tag in tags" :key="tag.id">
+				<router-link :to="`./labels/edit/${tag.id}`">
+					<span>{{tag.name}}</span>
+				</router-link>			
+			</li>
 		</ul>
 		<div class="buttonWrapper">
 			<button @click="createTag" class="createTag">新建标签</button>
@@ -11,7 +15,7 @@
 
 <script lang="ts">
 	import Vue from 'vue'
-	import { Component, Prop } from 'vue-property-decorator'
+	import { Component } from 'vue-property-decorator'
 	import { tagsModel } from '@/models/tagsModel'
 
 	tagsModel.fetch();
