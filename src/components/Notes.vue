@@ -1,10 +1,10 @@
 <template>
-	<div class="noteBar">
-	<label for="" class="notes">
-		<span>备注</span>
+	<div>
+	<label for="" class="label">
+		<span>{{fieldName}}</span>
 		<input type="text"
 		v-model="note"
-		placeholder="请在这里输入简要备注">
+		:placeholder="placeholder">
 		<button @click="submit">确定</button>
 	</label>
 	</div>
@@ -12,14 +12,19 @@
 
 <script lang="ts">
 	import Vue from 'vue'
-	import { Component } from 'vue-property-decorator'
+	import { Component, Prop } from 'vue-property-decorator'
 
 	@Component
 	export default class Notes extends Vue {
-		note = '';
+
+		@Prop({default: ''}) readonly value!:string;
+		@Prop({required: true}) readonly fieldName!:string;
+		@Prop({default: ''}) readonly placeholder!:string;
+
+		note = this.value;
 
 		submit(): void {
-			this.$emit('update:note', this.note);
+			this.$emit('update:value', this.note);
 		}
 	}
 </script>

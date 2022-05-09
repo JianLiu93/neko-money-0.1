@@ -2,13 +2,14 @@
 	<wrapper>
 		<ul class="tags">
 			<li v-for="tag in tags" :key="tag.id">
-				<router-link :to="`./labels/edit/${tag.id}`">
+				<router-link :to="`./labels/edit/${tag.id}`" class="tag">
 					<span>{{tag.name}}</span>
+					<Icon name="right-tangle" />
 				</router-link>			
 			</li>
 		</ul>
 		<div class="buttonWrapper">
-			<button @click="createTag" class="createTag">新建标签</button>
+			<AddButton @click="createTag" class="createTag">新建标签</AddButton>
 		</div>
 	</wrapper>
 </template>
@@ -46,19 +47,28 @@
 		background: #fff;
 		font-size: 16px;
 		padding-left: 20px;
+		margin-top: 10px;
 		>li {
-			min-height: 44px;
+			border-bottom: 1px solid #e6e6e6;
+			list-style: none;
+			.tag {
+			min-height: 2.5rem;
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			border-bottom: 1px solid #e6e6e6;
+			>span {
+				display: inline-block;
+			}
+			>svg {
+				width: 1.5rem;
+				height: 1.5rem;
+				vertical-align: -0.15rem;
+				fill: #888;
+				overflow: hidden;
+				margin-right: 20px;
+			}
+			}
 		}
-		svg {
-			width: 18px;
-			height: 18px;
-			color: #666;
-			margin-right: 20px;
-		}	
 	}
 	.buttonWrapper {
 		text-align: center;
