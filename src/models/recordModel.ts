@@ -27,6 +27,7 @@ const recordModel = {
 		const copyRecord: RecordData = this.clone(record);
 		copyRecord.createdAt = new Date();
 		this.data.push(copyRecord);
+		this.save();
 	}
 }
 

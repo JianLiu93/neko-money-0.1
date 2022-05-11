@@ -17,24 +17,18 @@
 <script lang="ts">
 	import Vue from 'vue'
 	import { Component } from 'vue-property-decorator'
-	import { tagsModel } from '@/models/tagsModel'
-
-	tagsModel.fetch();
 
 	@Component
 	export default class Labels extends Vue {
-		tags = window.tagData;
+		tags = this.$store.state.tagList;
 
+		beforeCreate(): void {
+			this.$store.commit('fetchTags');
+		}
 		createTag(): void {
 			const name = window.prompt('请输入标签名：');
 			if(name !== null) {
-				const message = tagsModel.create(name);
-
-				if(message === 'duplicated') {
-					window.alert('标签名重复！');
-				} else if(message === 'empty') {
-					window.alert('不能输入空标签！');
-				}
+				this.$store.commit('createTags', name);
 			}
 		}
 	}

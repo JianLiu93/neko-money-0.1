@@ -14,7 +14,6 @@
 <script lang="ts">
 	import Vue from 'vue'
 	import {Component, Prop} from 'vue-property-decorator'
-	import { tagsModel } from '@/models/tagsModel'
 
 	@Component
 	export default class Tags extends Vue {
@@ -35,8 +34,7 @@
 			if(!name) {
 				window.alert('标签为空！');
 			} else if(this.dataTags) {
-				this.$emit('update:dataTags', [...this.dataTags, {id: name, name: name}]);
-				tagsModel.create(name);
+				this.$store.commit('createTags', name);
 			}
 		}
 

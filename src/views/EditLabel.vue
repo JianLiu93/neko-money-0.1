@@ -16,39 +16,38 @@
 <script lang="ts">
 	import Vue from 'vue'
 	import { Component } from 'vue-property-decorator'
-	import { tagsModel } from '@/models/tagsModel';
 	import Notes from '@/components/Notes.vue';
 
 	@Component({
 		components: { Notes },
 	})
 	export default class EditLabel extends Vue {
-		tag: Tag = {id: '', name:''};
+		tag: Tag | null = this.$store.state.currentTag;
 
-		created(): void {
+		beforeCreate(): void {
+			this.$store.commit('fetchTags');
 			const id = this.$route.params.id;
-			tagsModel.fetch();
-			const tag = tagsModel.data.filter((item) => item.id === id)[0];
-			if(tag) {
-				this.tag = tag;
-			} else {
+			this.$store.commit('setCurrentTag', id);
+		}
+		created(): void {
+			if(!this.tag) {
 				this.$router.replace('/404');
 			}
 		}
 		onChangeTag(tagName: string): void {
+			console.log(tagName);
 			if(this.tag) {
-				tagsModel.update(this.tag.id, tagName);
-				this.tag.name = tagName;
+			this.$store.commit('updateTags', {id: this.tag.id, name: tagName});
+			}
+		}
+		remove(): void {
+			if(this.tag) {
+				this.$store.commit('removeTags', this.tag.id);
+				this.goBack();
 			}
 		}
 		goBack(): void {
 			this.$router.back();
-		}
-		remove(): void {
-			if(this.tag) {
-				tagsModel.remove(this.tag.id);
-				this.goBack();
-			}
 		}
 	}
 </script>
