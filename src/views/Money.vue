@@ -18,22 +18,19 @@
 	import Notes from '@/components/Notes.vue'
 	import Types from '@/components/Types.vue'
 	import Calculator from '@/components/Calculator.vue'
-	import { model } from '@/models/model'
-	import { tagsModel } from '@/models/tagsModel'
-
-	const recordList: RecordData[] =  model.fetch('recordList');
+	import { recordModel } from '@/models/recordModel'
 	
 	@Component({
 		components: { Tags, Notes, Types, Calculator },
 	})
 	export default class Money extends Vue {
 		// tags = ['美食', '住宿', '出行', '衣妆', '娱乐'];
-		tags = tagsModel.fetch();
+		tags = window.tagData;
 
 		record: RecordData = {
 			tag:'', note:'', type: '-', sum: 0
 		}
-		recordList: RecordData[] = recordList;
+		recordList: RecordData[] = window.recordData;
 
 		onUpdateTag (tag: string): void {
 			this.record.tag = tag;
@@ -51,15 +48,14 @@
 			if(!this.record.tag || !this.record.note) {
 				window.alert('请输入完整信息！');
 				return;
+			} else {
+				recordModel.create(this.record);
 			}
-			const copyRecord: RecordData = model.clone(this.record);
-			copyRecord.createdAt = new Date();
-			this.recordList.push(copyRecord);
 		}
 
 		@Watch('recordList')
 		onRecordListChange(): void {
-			model.save('recordList', this.recordList);
+			recordModel.save();
 		}
 	}
 </script>

@@ -11,16 +11,23 @@
 // 	}
 // }
 
-const model = {
-	fetch(keyName: string): any {
-		return JSON.parse(window.localStorage.getItem(keyName) || '[]');
+const recordModel = {
+	data: [] as RecordData[],
+	fetch(): RecordData[] {
+		this.data =  JSON.parse(window.localStorage.getItem('recordList') || '[]');
+		return this.data;
 	},
-	save(keyName: string, data: RecordData[] | string[]): void {
-		window.localStorage.setItem(keyName, JSON.stringify(data));
+	save(): void {
+		window.localStorage.setItem('recordList', JSON.stringify(this.data));
 	},
 	clone(data: RecordData | RecordData[]): any {
 		return JSON.parse(JSON.stringify(data));
+	},
+	create(record: RecordData): void {
+		const copyRecord: RecordData = this.clone(record);
+		copyRecord.createdAt = new Date();
+		this.data.push(copyRecord);
 	}
 }
 
-export { model };
+export { recordModel };

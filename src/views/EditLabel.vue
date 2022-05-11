@@ -41,13 +41,14 @@
 				this.tag.name = tagName;
 			}
 		}
+		goBack(): void {
+			this.$router.back();
+		}
 		remove(): void {
 			if(this.tag) {
 				tagsModel.remove(this.tag.id);
+				this.goBack();
 			}
-		}
-		goBack(): void {
-			this.$router.back();
 		}
 	}
 </script>

@@ -6,14 +6,20 @@ declare	type RecordData = {
 	createdAt?: Date  //类
 }
 
-declare type Tag = {
+type Tag = {
 	id: string
 	name: string
 }
-
-declare type tagsModel = {
+type tagsModel = {
 	data: Tag[]
 	fetch: () => Tag[]
-	create: (name: string) => 'success' | 'duplicated' | 'empty'
 	save: () => void
+	create: (name: string) => 'success' | 'duplicated' | 'empty'
+	update: (id: string, name: string) => 'success' | 'duplicated' | 'not found'
+	remove: (id: string) => void
+}
+
+interface Window {
+	tagData: Tag[]
+	recordData: RecordData[]
 }

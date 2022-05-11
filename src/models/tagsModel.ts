@@ -1,17 +1,3 @@
-type Tag = {
-	id: string
-	name: string
-}
-
-type tagsModel = {
-	data: Tag[]
-	fetch: () => Tag[]
-	save: () => void
-	create: (name: string) => 'success' | 'duplicated' | 'empty'
-	update: (id: string, name: string) => 'success' | 'duplicated' | 'not found'
-	remove: (id: string) => void
-}
-
 const keyName = 'tagList';
 const tagBasic: Tag[] = [
 	{id: '美食', name:'美食'}, 

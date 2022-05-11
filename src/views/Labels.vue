@@ -23,12 +23,13 @@
 
 	@Component
 	export default class Labels extends Vue {
-		tags = tagsModel.data;
+		tags = window.tagData;
 
 		createTag(): void {
 			const name = window.prompt('请输入标签名：');
 			if(name !== null) {
 				const message = tagsModel.create(name);
+
 				if(message === 'duplicated') {
 					window.alert('标签名重复！');
 				} else if(message === 'empty') {
@@ -36,9 +37,6 @@
 				}
 			}
 		}
-		// delTag() {
-		// 	tagsModel.delete(name);
-		// }
 	}
 </script>
 
