@@ -1,16 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createId from '@/models/createId';
 
 Vue.use(Vuex)
 
 const tagBasic: Tag[] = [
-	{id: '美食', name:'美食'}, 
-	{id: '住宿', name:'住宿'}, 
-	{id: '出行', name:'出行'}, 
-	{id: '衣妆', name:'衣妆'}, 
-	{id: '娱乐', name:'娱乐'}
+	{id: '1', name:'美食'}, 
+	{id: '2', name:'住宿'}, 
+	{id: '3', name:'出行'}, 
+	{id: '4', name:'衣妆'}, 
+	{id: '5', name:'娱乐'}
 ]
-function clone(data: RecordData | RecordData[]): any {
+function clone(data: any): any {
   return JSON.parse(JSON.stringify(data));
 }
 
@@ -31,7 +32,7 @@ const store = new Vuex.Store({
     createRecords(state, record: RecordData): void {
       const copyRecord: RecordData = clone(record);
       copyRecord.createdAt = new Date();
-      state.recordList.push(copyRecord);
+      state.recordList && state.recordList.push(copyRecord);
       store.commit('saveRecords');
     },
 
@@ -53,10 +54,12 @@ const store = new Vuex.Store({
         window.alert('标签名重复！');
         return;
       }
-      state.tagList.push({id: name, name: name});
+      const id = createId().toString();
+      state.tagList.push({id: id, name: name});
       store.commit('saveTags');
     },
-    updateTags(state,{id, name}) {
+    updateTags(state,payload: {id: string, name: string}) {
+      const {id, name} = payload;
       if(!name) {
         window.alert('标签名为空！');
         return;
