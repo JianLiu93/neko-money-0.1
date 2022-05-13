@@ -24,7 +24,9 @@
 	})
 	export default class Money extends Vue {
 		// tags = ['美食', '住宿', '出行', '衣妆', '娱乐'];
-		tags: Tag[] = this.$store.state.tagList;
+		get tags(): Tag[] | null {
+			return this.$store.state.tagList;
+		}
 
 		record: RecordData = {
 			tag:'', note:'', type: '-', sum: 0

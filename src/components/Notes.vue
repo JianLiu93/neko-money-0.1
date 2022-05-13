@@ -4,8 +4,9 @@
 		<span>{{fieldName}}</span>
 		<input type="text"
 		v-model="note"
-		:placeholder="placeholder">
-		<button @click="submit">确定</button>
+		:placeholder="placeholder"
+		@blur="submit">
+		<!-- <button @click="submit">确定</button> -->
 	</label>
 	</div>
 </template>

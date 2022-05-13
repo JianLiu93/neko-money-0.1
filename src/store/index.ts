@@ -84,8 +84,12 @@ const store = new Vuex.Store({
         break;
         }
       }
-      state.tagList.splice(index,1);
-      store.commit('saveTags');
+      if(index >= 0) {
+        state.tagList.splice(index,1);
+        store.commit('saveTags');
+      } else {
+        window.alert('删除失败！');
+      }
     },
 
     // currentTag

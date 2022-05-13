@@ -20,8 +20,10 @@
 
 	@Component
 	export default class Labels extends Vue {
-		tags = this.$store.state.tagList;
-
+		get tags(): Tag[] | null {
+			return this.$store.state.tagList;
+		}
+		
 		beforeCreate(): void {
 			this.$store.commit('fetchTags');
 		}

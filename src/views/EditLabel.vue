@@ -22,7 +22,9 @@
 		components: { Notes },
 	})
 	export default class EditLabel extends Vue {
-		tag: Tag | null = this.$store.state.currentTag;
+		get tag(): Tag | null {
+			return this.$store.state.currentTag;
+		}
 
 		beforeCreate(): void {
 			this.$store.commit('fetchTags');
