@@ -1,9 +1,11 @@
 <template>
 	<div>
 		<ul class="types">
-			<li :class="type === '-' && 'selected'"
+			<li :class="{selected: myType === '-', 
+			[classPrefix + '-item']: classPrefix}"
 			@click="selectType('-')">支出</li>
-			<li :class="type === '+' && 'selected'"
+			<li :class="{selected: myType === '+', 
+			[classPrefix + '-item']: classPrefix}"
 			@click="selectType('+')">收入</li>
 		</ul>
 	</div>
@@ -15,16 +17,19 @@
 
 	@Component
 	export default class Types extends Vue {
-		type = '-';
+		@Prop(String) readonly type!: string;
+		@Prop(String) readonly classPrefix?: string;
 
+		myType = this.type;
+		
 		selectType(type: string) :void {
 			if((type !== '-') && (type !== '+')) {
 				throw new Error('wrong type');
 			}
-			this.type = type;
+			this.myType = type;
 		}
 
-		@Watch('type')
+		@Watch('myType')
 		onTypeChanged(value: string): void {
 			this.$emit('update:type', value);
 		}

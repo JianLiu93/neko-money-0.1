@@ -37,7 +37,6 @@
 			}
 		}
 		onChangeTag(tagName: string): void {
-			console.log(tagName);
 			if(this.tag) {
 			this.$store.commit('updateTags', {id: this.tag.id, name: tagName});
 			}

@@ -4,7 +4,7 @@
 	<Tags :data-tags="tags" @update:tag="onUpdateTag" />
 	<Notes class="noteBar" @update:value="onUpdateNote"
 	field-name="备注" placeholder="请在这里输入简要备注"/>
-	<Types @update:type="onUpdateType" />
+	<Types type="-" @update:type="onUpdateType" />
 	<Calculator @update:sum="onUpdateSum" @submit="saveRecord"/>
 	{{recordList}}
     </wrapper>

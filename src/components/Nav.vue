@@ -25,15 +25,13 @@
 </template>
 
 <script lang="ts">
-	import moneyIcon from '@/assets/icons/money.svg'
-	import labelsIcon from '@/assets/icons/labels.svg'
-	import statisticsIcon from '@/assets/icons/statistics.svg'
-
-  console.log(moneyIcon);
-  console.log(labelsIcon);
-  console.log(statisticsIcon);
+	// import moneyIcon from '@/assets/icons/money.svg'
+	// import labelsIcon from '@/assets/icons/labels.svg'
+	// import statisticsIcon from '@/assets/icons/statistics.svg'
+  // console.log(moneyIcon);
+  // console.log(labelsIcon);
+  // console.log(statisticsIcon);
   
-
 	export default {
 		name: 'Nav',
 	}

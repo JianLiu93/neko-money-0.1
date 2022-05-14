@@ -11,7 +11,7 @@ const tagBasic: Tag[] = [
 	{id: '4', name:'衣妆'}, 
 	{id: '5', name:'娱乐'}
 ]
-function clone(data: any): any {
+function clone<T>(data: T): T {
   return JSON.parse(JSON.stringify(data));
 }
 
@@ -31,7 +31,7 @@ const store = new Vuex.Store({
     },
     createRecords(state, record: RecordData): void {
       const copyRecord: RecordData = clone(record);
-      copyRecord.createdAt = new Date();
+      copyRecord.createdAt = new Date().toISOString();
       state.recordList && state.recordList.push(copyRecord);
       store.commit('saveRecords');
     },
