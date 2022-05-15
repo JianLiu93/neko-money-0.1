@@ -6,7 +6,9 @@
 		</div>
 		<ul>
 			<li v-for="(group, index) in groupList" :key="index">
-				<h3 class="title">{{beautify(group.title)}}</h3>
+				<h3 class="title" v-if="interval === 'day'">{{dayTitle(group.title)}}</h3>
+				<h3 class="title" v-if="interval === 'month'">{{monthTitle(group.title)}}</h3>
+				<h3 class="title" v-if="interval === 'year'">{{yearTitle(group.title)}}</h3>
 				<ul>
 					<li class="record" v-for="item in group.items" :key="item.id">
 						<span>{{tagString(item.tag)}}</span>
@@ -22,17 +24,34 @@
 
 <script lang="ts">
 	import Vue from 'vue'
-	import dayjs from 'dayjs'
+	import dayjs, { OpUnitType } from 'dayjs'
 	import { Component } from 'vue-property-decorator'
 	import Types from '@/components/Types.vue';
 	import Tabs from '@/components/Tabs.vue';
 	import intervalList from '@/constants/intervalList';
 
-	type HashTableValue = { title: string, items: RecordData[] };
 	type result = {title: string, items: RecordData[], total?: number}[];
 
 	function clone<T>(data: T): T {
 		return JSON.parse(JSON.stringify(data));
+	}
+
+	function groupResult(newList: RecordData[], interval: OpUnitType): result {
+		dayjs.locale('zh-cn');
+		const result: result = [{title: dayjs(newList[0].createdAt).format('YYYY-MM-DD'), items: [newList[0]]}];
+		for(let i=1; i<newList.length; i++) {
+			const current = newList[i];
+			const last = result[result.length - 1];
+			if( dayjs(last.title).isSame(dayjs(current.createdAt), interval) ) {
+				last.items.push(current);
+			} else {
+				result.push({title: dayjs(current.createdAt).format('YYYY-MM-DD'), items: [current]});
+			}
+		}
+		result.forEach(group => {
+			group.total = group.items.reduce((sum, item) => sum + item.sum, 0);
+		});
+		return result;
 	}
 
 	@Component({
@@ -40,37 +59,23 @@
 	})
 	export default class Statistics extends Vue {
 		type = '-';
-		interval = 'day';
+		interval= 'day' as OpUnitType;
 		intervalList = intervalList;
-		
+
 		get recordList(): RecordData[] {
 			return this.$store.state.recordList;
 		}
 		get groupList(): result {
+			dayjs.locale('zh-cn');
 			const {recordList} = this;
 			if(recordList.length === 0) {return [];}
 			const copyRecord = clone(recordList);
 			const newList = copyRecord.filter(r => r.type === this.type)
-			.sort((a, b) => dayjs(a.createdAt).valueOf()
-			- dayjs(b.createdAt).valueOf());
+			.sort((a, b) => dayjs(a.createdAt).valueOf() - dayjs(b.createdAt).valueOf());
 
-			const result: result = [{title: dayjs(newList[0].createdAt).format('YYYY-MM-DD'), items: [newList[0]]}];
-			for(let i=1; i<newList.length; i++) {
-				const current = newList[i];
-				const last = result[result.length - 1];
-				if( dayjs(last.title).isSame(dayjs(current.createdAt), 'day') ) {
-					last.items.push(current);
-				} else {
-					result.push({title: dayjs(current.createdAt).format('YYYY-MM-DD'), items: [current]});
-				}
-			}
-			console.log(result);
-			result.forEach(group => {
-				group.total = group.items.reduce((sum, item) => sum + item.sum, 0);
-			});
-			return result;
+			return groupResult(newList, this.interval);
+			// type HashTableValue = { title: string, items: RecordData[] };
 			// const hashTable: { title: string, items: RecordData[] }[];
-
 			// const hashTable: { [key: string]: HashTableValue } = {};
 			// for(let i=0; i<recordList.length; i++) {
 			// 	console.log(recordList[i].createdAt);
@@ -92,19 +97,43 @@
 			return tag.length === 0 ? 'none' : tag;
 		}
 
-		beautify(string: string): string {
+		dayTitle(string: string): string {
 			const day = dayjs(string);
 			const now = dayjs();
-			if(day.isSame(now, 'day')) {
+			if(day.isSame(now, 'date')) {
 				return '今天';
-			} else if(day.isSame(now.subtract(1,'day'), 'day')) {
+			} else if(day.isSame(now.subtract(1,'day'), 'date')) {
 				return '昨天';
-			} else if(day.isSame(now.subtract(2,'day'), 'day')) {
+			} else if(day.isSame(now.subtract(2,'day'), 'date')) {
 				return '前天';
 			} else if(day.isSame(now, 'year')) {
 				return day.format('M月D日');
 			} else {
 				return day.format('YYYY年M月D日');
+			}
+		}
+		monthTitle(string: string): string {
+			const day = dayjs(string);
+			const now = dayjs();
+			if(day.isSame(now, 'month')) {
+				return '本月';
+			} else if(day.isSame(now.subtract(1,'month'), 'month')) {
+				return '上月';
+			} else if(day.isSame(now, 'year')) {
+				return day.format('M月');
+			} else {
+				return day.format('YYYY年M月');
+			}
+		}
+		yearTitle(string: string): string {
+			const day = dayjs(string);
+			const now = dayjs();
+			if(day.isSame(now, 'year')) {
+				return '本年';
+			} else if(day.isSame(now.subtract(1,'month'), 'month')) {
+				return '去年';
+			} else {
+				return day.format('YYYY年');
 			}
 		}
 	}
