@@ -29,6 +29,7 @@
 	import intervalList from '@/constants/intervalList';
 
 	type HashTableValue = { title: string, items: RecordData[] };
+	type result = {title: string, items: RecordData[], total?: number}[];
 
 	function clone<T>(data: T): T {
 		return JSON.parse(JSON.stringify(data));
@@ -45,12 +46,15 @@
 		get recordList(): RecordData[] {
 			return this.$store.state.recordList;
 		}
-		get groupList(): HashTableValue[] {
+		get groupList(): result {
 			const {recordList} = this;
 			if(recordList.length === 0) {return [];}
 			const copyRecord = clone(recordList);
-			const newList = copyRecord.sort((a, b) => dayjs(a.createdAt).valueOf() - dayjs(b.createdAt).valueOf());
-			const result = [{title: dayjs(newList[0].createdAt).format('YYYY-MM-DD'), items: [newList[0]]}];
+			const newList = copyRecord.filter(r => r.type === this.type)
+			.sort((a, b) => dayjs(a.createdAt).valueOf()
+			- dayjs(b.createdAt).valueOf());
+
+			const result: result = [{title: dayjs(newList[0].createdAt).format('YYYY-MM-DD'), items: [newList[0]]}];
 			for(let i=1; i<newList.length; i++) {
 				const current = newList[i];
 				const last = result[result.length - 1];
@@ -61,6 +65,9 @@
 				}
 			}
 			console.log(result);
+			result.forEach(group => {
+				group.total = group.items.reduce((sum, item) => sum + item.sum, 0);
+			});
 			return result;
 			// const hashTable: { title: string, items: RecordData[] }[];
 
@@ -103,7 +110,7 @@
 	}
 </script>
 
-<style  lang="scss" scoped>
+<style lang="scss" scoped>
 	.top ::v-deep {
 		.type-item {
 		background: #fff;
