@@ -1,10 +1,11 @@
 <template>
-	<wrapper>
+	<wrapper :style="{height:h+'px'}">
 		<div class="top statistics">
 		<Types class-prefix="type" type="-" @update:type="updateType"/>
 		<Tabs class-prefix="interval" :data-source="intervalList" :value.sync="interval" />
 		</div>
 		<ul>
+			<li v-if="groupList.length === 0"><h3>没有数据</h3></li>
 			<li v-for="(group, index) in groupList" :key="index">
 				<h3 class="title" v-if="interval === 'day'">{{dayTitle(group.title)}}</h3>
 				<h3 class="title" v-if="interval === 'month'">{{monthTitle(group.title)}}</h3>
@@ -37,7 +38,6 @@
 	}
 
 	function groupResult(newList: RecordData[], interval: OpUnitType): result {
-		dayjs.locale('zh-cn');
 		const result: result = [{title: dayjs(newList[0].createdAt).format('YYYY-MM-DD'), items: [newList[0]]}];
 		for(let i=1; i<newList.length; i++) {
 			const current = newList[i];
@@ -58,6 +58,8 @@
 		components: { Types, Tabs },
 	})
 	export default class Statistics extends Vue {
+		h = document.documentElement.clientHeight;
+		
 		type = '-';
 		interval= 'day' as OpUnitType;
 		intervalList = intervalList;
@@ -66,7 +68,6 @@
 			return this.$store.state.recordList;
 		}
 		get groupList(): result {
-			dayjs.locale('zh-cn');
 			const {recordList} = this;
 			if(recordList.length === 0) {return [];}
 			const copyRecord = clone(recordList);

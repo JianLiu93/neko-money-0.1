@@ -1,5 +1,5 @@
 <template>
-	<wrapper>
+	<wrapper :style="{height:h+'px'}">
 		<div class="top-bar">
 			<Icon name="left-tangle" @click="goBack"/>
 			<span>编辑标签</span>
@@ -8,7 +8,12 @@
 			<div class="label-name">{{tag.name}}</div>
 			<Notes class="input-tag" @update:value="onChangeTag"
 			field-name="标签名" placeholder="请输入标签名" />
-			<AddButton class="del-button" @click="remove">删除标签</AddButton>
+			<div>
+				<AddButton class="add-button" @click="add">更新标签</AddButton>
+			</div>
+			<div>
+				<AddButton class="del-button" @click="remove">删除标签</AddButton>
+			</div>
 		</div>
 	</wrapper>
 </template>
@@ -22,6 +27,11 @@
 		components: { Notes },
 	})
 	export default class EditLabel extends Vue {
+
+		h = document.documentElement.clientHeight;
+
+		inputTag: Tag = {id:'', name:''};
+
 		get tag(): Tag | null {
 			return this.$store.state.currentTag;
 		}
@@ -37,8 +47,11 @@
 			}
 		}
 		onChangeTag(tagName: string): void {
+				this.inputTag.name = tagName;
+		}
+		add(): void {
 			if(this.tag) {
-			this.$store.commit('updateTags', {id: this.tag.id, name: tagName});
+			this.$store.commit('updateTags', {id: this.tag.id, name: this.inputTag.name});
 			}
 		}
 		remove(): void {
@@ -82,7 +95,7 @@
 			font-size: 20px;
 			vertical-align: middle;
 			}
-		.del-button {
+		.del-button, .add-button {
 		margin-top: 30px;
 		background: #656565;
 		color: #eee;

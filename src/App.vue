@@ -9,24 +9,17 @@
 </template>
 
 <style lang="scss">
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-a {
-  color: inherit;
-  text-decoration: none;
-}
+@import "~@/assets/style/reset.css";
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #333;
+  line-height: 1.5;
 }
 .wrapper {
-  height: 96vh;
   display: flex;
   flex-direction: column;
   overflow: auto;

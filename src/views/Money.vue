@@ -1,8 +1,8 @@
 <template>
   <div>
-    <wrapper>
+    <wrapper :style="{height:h+'px'}">
 	<Tags :data-tags="tags" @update:tag="onUpdateTag" />
-	<Notes class="noteBar" @update:value="onUpdateNote"
+	<Notes class="note-bar" @update:value="onUpdateNote"
 	field-name="备注" placeholder="请在这里输入简要备注"/>
 	<Types type="-" @update:type="onUpdateType" />
 	<Calculator @update:sum="onUpdateSum" @submit="saveRecord"/>
@@ -18,12 +18,15 @@
 	import Notes from '@/components/Notes.vue'
 	import Types from '@/components/Types.vue'
 	import Calculator from '@/components/Calculator.vue'
+
 	
 	@Component({
 		components: { Tags, Notes, Types, Calculator },
 	})
 	export default class Money extends Vue {
-		// tags = ['美食', '住宿', '出行', '衣妆', '娱乐'];
+
+		h = document.documentElement.clientHeight;
+		
 		get tags(): Tag[] | null {
 			return this.$store.state.tagList;
 		}

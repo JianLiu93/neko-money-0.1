@@ -1,5 +1,5 @@
 <template>
-	<wrapper>
+	<wrapper :style="{height:h+'px'}">
 		<ul class="tags">
 			<li v-for="tag in tags" :key="tag.id">
 				<router-link :to="`./labels/edit/${tag.id}`" class="tag">
@@ -20,6 +20,9 @@
 
 	@Component
 	export default class Labels extends Vue {
+
+		h = document.documentElement.clientHeight;
+
 		get tags(): Tag[] | null {
 			return this.$store.state.tagList;
 		}
