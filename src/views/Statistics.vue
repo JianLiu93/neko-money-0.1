@@ -3,6 +3,9 @@
 		<div class="top statistics">
 		<Types class-prefix="type" type="-" @update:type="updateType"/>
 		<Tabs class-prefix="interval" :data-source="intervalList" :value.sync="interval" />
+		<div class="chart-wrapper" ref="chartWrapper">
+			<Chart class="chart" :options="dataMap" />
+		</div>
 		</div>
 		<ul>
 			<li v-if="groupList.length === 0"><h3>没有数据</h3></li>
@@ -19,7 +22,6 @@
 				</ul>
 			</li>
 		</ul>
-
 	</wrapper>
 </template>
 
@@ -30,6 +32,9 @@
 	import Types from '@/components/Types.vue';
 	import Tabs from '@/components/Tabs.vue';
 	import intervalList from '@/constants/intervalList';
+	import Chart from '@/components/Chart.vue';
+	import echarts, { EChartsOption } from 'echarts';
+	import _ from 'lodash';
 
 	type result = {title: string, items: RecordData[], total?: number}[];
 
@@ -38,6 +43,7 @@
 	}
 
 	function groupResult(newList: RecordData[], interval: OpUnitType): result {
+		if(newList.length === 0) {return [];}
 		const result: result = [{title: dayjs(newList[0].createdAt).format('YYYY-MM-DD'), items: [newList[0]]}];
 		for(let i=1; i<newList.length; i++) {
 			const current = newList[i];
@@ -54,22 +60,90 @@
 		return result;
 	}
 
+
 	@Component({
-		components: { Types, Tabs },
+		components: { Types, Tabs, Chart },
 	})
 	export default class Statistics extends Vue {
 		h = document.documentElement.clientHeight;
 		
 		type = '-';
-		interval= 'day' as OpUnitType;
+		interval = 'day' as OpUnitType;
 		intervalList = intervalList;
+
+		get chartArray() {
+			const today = new Date();
+			const array = [];
+			for(let i=0; i<=29; i++) {
+				const dateStr = dayjs(today)
+				.subtract(i, 'day').format('YYYY-MM-DD');
+				const found = _.find(this.groupList, {
+					title: dateStr
+				});
+				array.push({
+					date: dateStr, value: found ? found.total: 0
+				});
+			}
+			array.sort((a, b) => {
+				if(a.date > b.date) {
+					return 1;
+				} else if(a.date === b.date) {
+					return 0;
+				} else {
+					return -1;
+				}
+			});
+			return array;
+		}
+
+		get dataMap(): EChartsOption {
+			const keys = this.chartArray.map(item => item.date);
+			const values = this.chartArray.map(item => (item.value || 0).toString());
+
+			return {
+			grid: {
+				left: 0,
+				right: 0,
+				bottom: 40,
+			},
+			xAxis: {
+			type: 'category',
+			data: keys,
+			axisTick: { alignWithLabel: true },
+			axisLine: { lineStyle: {color: 'red'} },
+			axisLabel: {
+				formatter: function (value:string, index:number) {
+					return value.substr(5);
+				}
+			}
+			},
+			yAxis: {
+				type: 'value',
+				show: false
+			},
+			series: [
+				{
+				data: values,
+				type: 'line',
+				smooth: true,
+				itemStyle: { borderWidth: 1, color: 'red', borderColor: 'blue' },
+				symbol: 'circle',
+				symbolSize: 12,
+				}],
+				tooltip: {
+					show: true, triggerOn: 'click',
+					formatter: '{c}',
+					position: 'top',
+				}
+			};
+		}
 
 		get recordList(): RecordData[] {
 			return this.$store.state.recordList;
 		}
 		get groupList(): result {
 			const {recordList} = this;
-			if(recordList.length === 0) {return [];}
+			if(recordList.length === 0 || !recordList) {return [];}
 			const copyRecord = clone(recordList);
 			const newList = copyRecord.filter(r => r.type === this.type)
 			.sort((a, b) => dayjs(a.createdAt).valueOf() - dayjs(b.createdAt).valueOf());
@@ -88,6 +162,11 @@
 
 		beforeCreate(): void {
 			this.$store.commit('fetchRecords');
+		}
+
+		mounted(): void {
+			const div = this.$refs.chartWrapper as HTMLDivElement;
+			div.scrollLeft = div.scrollWidth;
 		}
 
 
@@ -181,5 +260,12 @@
 		margin-right: auto;
 		margin-left: 8px;
 		color: #aaa;
+	}
+	.chart {
+		width: 430%;
+		&-wrapper {
+			overflow: auto;
+		}
+		&-wrapper::-webkit-scrollbar{width: 0;}
 	}
 </style>
