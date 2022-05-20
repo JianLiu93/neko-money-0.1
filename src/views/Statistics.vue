@@ -7,7 +7,7 @@
 			<Chart class="chart" :options="dataMap" />
 		</div>
 		</div>
-		<ul>
+		<ul class="group-list">
 			<li v-if="groupList.length === 0"><h3>没有数据</h3></li>
 			<li v-for="(group, index) in groupList" :key="index">
 				<h3 class="title" v-if="interval === 'day'">{{dayTitle(group.title)}}</h3>
@@ -104,15 +104,17 @@
 			grid: {
 				left: 0,
 				right: 0,
-				bottom: 40,
+				top: 20,
+				bottom: 20,
 			},
+
 			xAxis: {
 			type: 'category',
 			data: keys,
 			axisTick: { alignWithLabel: true },
 			axisLine: { lineStyle: {color: 'red'} },
 			axisLabel: {
-				formatter: function (value:string, index:number) {
+				formatter: function (value:string) {
 					return value.substr(5);
 				}
 			}
@@ -267,5 +269,9 @@
 			overflow: auto;
 		}
 		&-wrapper::-webkit-scrollbar{width: 0;}
+	}
+	.group-list {
+		max-height: 300px;
+		overflow: auto;
 	}
 </style>
