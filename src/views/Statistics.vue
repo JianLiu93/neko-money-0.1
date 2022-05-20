@@ -33,7 +33,7 @@
 	import Tabs from '@/components/Tabs.vue';
 	import intervalList from '@/constants/intervalList';
 	import Chart from '@/components/Chart.vue';
-	import echarts, { EChartsOption } from 'echarts';
+	import { EChartsOption } from 'echarts';
 	import _ from 'lodash';
 
 	type result = {title: string, items: RecordData[], total?: number}[];
