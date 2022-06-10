@@ -43,6 +43,7 @@
   flex-wrap: nowrap;
   justify-content: center;
   caret-color: transparent;
+  background: #ff5900;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6);
 
   .nav-icon {
@@ -52,24 +53,25 @@
     .item {
       display: block;
       padding: 6px 0;
-      color: #888;
+      color: #ececec;
     }
     .text {
-      padding-top: 4px;
-      font-size: 16px;
+      padding-top: 2px;
+      font-size: 12px;
+      height: 16px;
     }
   }
   svg {
-    width: 3rem;
-    height: 3rem;
+    width: 2rem;
+    height: 2rem;
     vertical-align: -0.45rem;
-    fill: #888;
+    fill: #ececec;
     overflow: hidden;
   }
   .item.selected {
-    color: #333;
+    color: #5b3611;
     > svg {
-      fill: #333;
+      fill: #5b3611;
     }
   }
 }

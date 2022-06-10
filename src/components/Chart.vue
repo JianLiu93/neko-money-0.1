@@ -34,7 +34,5 @@
 </script>
 
 <style lang="scss" scoped>
-	.wrapper {
-		height: 300px;
-	}
+
 </style>

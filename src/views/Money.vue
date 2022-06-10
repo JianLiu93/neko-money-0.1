@@ -1,15 +1,19 @@
 <template>
-  <div>
+  <div id="money">
     <wrapper :style="{height:h+'px'}">
+	<Types class="header" type="-" @update:type="onUpdateType" />
 	<Tags :data-tags="tags" @update:tag="onUpdateTag" />
-	<Notes class="note-bar" @update:value="onUpdateNote"
-	field-name="备注" placeholder="请在这里输入简要备注"/>
-	<DateBar class="date-bar" :value.sync="record.createdAt"
-	type="date"
-	field-name="日期" placeholder="请在这里输入日期"/>
-	<Types type="-" @update:type="onUpdateType" />
-	<Calculator @update:sum="onUpdateSum" @submit="saveRecord"/>
-	{{recordList}}
+	<div class="page-bottom">
+      <div class="notes">
+      <Notes class="note-bar" @update:value="onUpdateNote"
+      field-name="备注" placeholder="请在这里输入简要备注"/>
+      </div>
+      <DateBar class="date-bar" :value.sync="record.createdAt"
+      type="date"
+      field-name="日期" placeholder="请在这里输入日期"/>
+      <Calculator ref="Calculator" @update:sum="onUpdateSum" @submit="saveRecord"/>
+      <!-- {{recordList}} -->
+	</div>
     </wrapper>
   </div>
 </template>
@@ -65,11 +69,22 @@
 				return;
 			} else {
 				this.$store.commit('createRecords',this.record);
+				(this.$refs.Calculator as any).clear();
 			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-
+#money {
+	// #f1d3a7 #ffeab9 #ffb70e #d6843c #fcb577 #fdab90 #fe8867
+	background: #fff;
+	caret-color: transparent;
+	&::v-deep .note-bar {
+		caret-color: auto;
+	}
+	&::v-deep .wrapper>.content {
+		justify-content: space-between;
+	}
+}
 </style>

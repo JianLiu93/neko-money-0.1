@@ -1,23 +1,27 @@
 <template>
   <div id="app">
-    <!-- <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div> -->
     <router-view />
   </div>
 </template>
 
 <style lang="scss">
 @import "~@/assets/style/reset.css";
+@import "~@/assets/style/unit.scss";
 
+body::-webkit-scrollbar{
+	display: none;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: $font-hei;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
   text-align: center;
   color: #333;
   line-height: 1.5;
+  background: #f6f6f6;
+  max-width: 600px;
+  margin: 0 auto;
 }
 .wrapper {
   display: flex;

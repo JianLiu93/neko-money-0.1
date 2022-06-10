@@ -7,8 +7,9 @@
 			<Chart class="chart" :options="dataMap" />
 		</div>
 		</div>
+		<div class="data-list">
 		<ul class="group-list">
-			<li v-if="groupList.length === 0"><h3>没有数据</h3></li>
+			<li v-if="groupList.length === 0"><h3>目前没有记录</h3></li>
 			<li v-for="(group, index) in groupList" :key="index">
 				<h3 class="title" v-if="interval === 'day'">{{dayTitle(group.title)}}</h3>
 				<h3 class="title" v-if="interval === 'month'">{{monthTitle(group.title)}}</h3>
@@ -22,6 +23,7 @@
 				</ul>
 			</li>
 		</ul>
+		</div>
 	</wrapper>
 </template>
 
@@ -99,13 +101,15 @@
 		get dataMap(): EChartsOption {
 			const keys = this.chartArray.map(item => item.date);
 			const values = this.chartArray.map(item => (item.value || 0).toString());
+			console.log('values', values);
 
 			return {
 			grid: {
 				left: 0,
 				right: 0,
-				top: 20,
-				bottom: 20,
+				top: 60,
+				bottom: 10,
+				containLabel: true
 			},
 
 			xAxis: {
@@ -123,20 +127,20 @@
 				type: 'value',
 				show: false
 			},
-			series: [
-				{
+			series: [{
 				data: values,
 				type: 'line',
 				smooth: true,
-				itemStyle: { borderWidth: 1, color: 'red', borderColor: 'blue' },
+				itemStyle: { borderWidth: 1, color: 'white', borderColor: 'red' },
+				lineStyle: { color: 'red', },
 				symbol: 'circle',
-				symbolSize: 12,
-				}],
-				tooltip: {
-					show: true, triggerOn: 'click',
-					formatter: '{c}',
-					position: 'top',
-				}
+				symbolSize: 10,
+			}],
+			tooltip: {
+				show: true, triggerOn: 'click',
+				formatter: '{c}',
+				position: 'top',
+			},
 			};
 		}
 
@@ -223,25 +227,26 @@
 
 <style lang="scss" scoped>
 	.top ::v-deep {
-		.type-item {
-		background: #fff;
-		&.selected {
-			background: #c4c4c4;
-			&::after {
-				display: none;
+		.tabs {
+		margin-top: 2px;
+		.interval-item {
+			height: 40px;
+			background: #fff;
+			&.selected {
+				background: #fdab90;
+				&::after {
+					height: 2px;
+				}
 			}
 		}
 		}
-		.tabs {
-		margin-top: 20px;
-		.interval-item {
-		background: #fff;
-		&.selected {
-			background: #c4c4c4;
-		}
-		}
-		}
 	}
+	.chart-wrapper {
+      height: 280px;
+      &::v-deep .wrapper {
+        height: 270px;
+      }
+    }
 	%item {
 		padding: 8px 16px;
 		line-height: 24px;
@@ -251,7 +256,7 @@
 		align-content: center;
 	}
 	.title {
-		background: #eee;
+		background: #ffeab9;
 		@extend %item;
 	}
 	.record {
@@ -263,15 +268,37 @@
 		margin-left: 8px;
 		color: #aaa;
 	}
-	.chart {
-		width: 430%;
-		&-wrapper {
-			overflow: auto;
+	@mixin scroll {
+		&::-webkit-scrollbar {
+		width: 10px;
+		height: 10px;
 		}
-		&-wrapper::-webkit-scrollbar{width: 0;}
+		&::-webkit-scrollbar-thumb {
+		// 滚动条里面小方块
+		border-radius: 10px;
+		box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+		background: #ccc;
+		}
 	}
-	.group-list {
-		max-height: 300px;
+	.chart {
+		width: 420%;
+		&-wrapper {
+			overflow-x: auto;
+			@include scroll();
+		}
+		@media (max-width: 500px) {
+		&-wrapper::-webkit-scrollbar {display: none;}
+		}
+	}
+	.data-list {
+		min-height: 230px;
 		overflow: auto;
+		flex-grow: 1;
+		.group-list {
+			@include scroll();
+			@media (max-width: 500px) {
+				&::-webkit-scrollbar {display: none;}
+			}
+		}
 	}
 </style>
