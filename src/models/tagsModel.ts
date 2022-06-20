@@ -1,61 +1,78 @@
-const keyName = 'tagList';
-const tagBasic: Tag[] = [
-	{id: '美食', name:'美食'}, 
-	{id: '住宿', name:'住宿'}, 
-	{id: '出行', name:'出行'}, 
-	{id: '衣妆', name:'衣妆'}, 
-	{id: '娱乐', name:'娱乐'}
-]
+const tagBasic_out: Tag[] = [
+	{id: '1', name:'餐饮', icon:'can_yin'}, 
+	{id: '2', name:'住宿', icon:'zhu_su'}, 
+	{id: '3', name:'出行', icon:'chu_xing'}, 
+	{id: '4', name:'衣妆', icon:'yi_zhuang'}, 
+	{id: '5', name:'娱乐', icon:'yu_le'},
+	{id: '6', name:'日用', icon:'ri_yong'},
+];
+const iconMap = [
+	{name:'default', icon_name:'default'}, 
+	{name:'add', icon_name:'plus'}, 
+	{name:'餐饮', icon_name:'can_yin'}, 
+	{name:'住宿', icon_name:'zhu_su'}, 
+	{name:'出行', icon_name:'chu_xing'}, 
+	{name:'衣妆', icon_name:'yi_zhuang'}, 
+	{name:'娱乐', icon_name:'yu_le'},
+	{name:'日用', icon_name:'ri_yong'},
+	{name:'外卖', icon_name:'wai_mai'},
+	{name:'烟酒', icon_name:'yan_jiu'},
+	{name:'数码', icon_name:'shu_ma'},
+	{name:'游戏', icon_name:'you_xi'},
+	{name:'通讯费', icon_name:'tong_xun_fei'},
+	{name:'水电费', icon_name:'shui_dian_fei'},
+	{name:'运动健身', icon_name:'yun_dong_jian_shen'},
+	{name:'旅游', icon_name:'lv_you'},
+	{name:'医疗', icon_name:'yi_liao'},
+	{name:'教育', icon_name:'jiao_yu'},
+	{name:'宠物', icon_name:'chong_wu'},
+// income
+	{name:'工资', icon_name:'gong_zi'},
+	{name:'奖金', icon_name:'jiang_jin'},
+	{name:'营业', icon_name:'ying_ye'},
+	{name:'兼职', icon_name:'jian_zhi'},
+	{name:'报销', icon_name:'bao_xiao'},
+	{name:'投资', icon_name:'tou_zi'},
+	{name:'零花', icon_name:'ling_hua'},
+];
+const iconList: Tag[] = [
+	{id:'1', name:'餐饮', icon:'can_yin'}, 
+	{id:'2', name:'住宿', icon:'zhu_su'}, 
+	{id:'3', name:'出行', icon:'chu_xing'}, 
+	{id:'4', name:'衣妆', icon:'yi_zhuang'}, 
+	{id:'5', name:'娱乐', icon:'yu_le'},
+	{id:'6', name:'日用', icon:'ri_yong'},
+	{id:'7', name:'外卖', icon:'wai_mai'},
+	{id:'8', name:'零食', icon:'ling_shi'},
+	{id:'', name:'烟酒', icon:'yan_jiu'},
+	{id:'', name:'数码', icon:'shu_ma'},
+	{id:'', name:'游戏', icon:'you_xi'},
+	{id:'', name:'通讯费', icon:'tong_xun_fei'},
+	{id:'', name:'水电费', icon:'shui_dian_fei'},
+	{id:'', name:'运动健身', icon:'yun_dong_jian_shen'},
+	{id:'', name:'旅游', icon:'lv_you'},
+	{id:'', name:'健康', icon:'jian_kang'},
+	{id:'', name:'医疗', icon:'yi_liao'},
+	{id:'', name:'教育', icon:'jiao_yu'},
+	{id:'', name:'宠物', icon:'chong_wu'},
+	{id:'', name:'珠宝', icon:'zhu_bao'},
+	{id:'', name:'投资', icon:'tou_zi'},
+	{id:'', name:'黄金', icon:'huang_jin'},
+];
 
-const tagsModel: tagsModel = {
-	data: [],
-	fetch() {
-		this.data = JSON.parse(window.localStorage.getItem(keyName) || '[]');
-		if(this.data.length === 0) {this.data = tagBasic}
-		return this.data;
-	},
-	save() {
-		window.localStorage.setItem(keyName, JSON.stringify(this.data));
-	},
-	create(name) {
-		const dataNames = this.data.map((item) => item.name);
-	// 成功和失败有返回值，失败返回原因，1重复
-		if(name === '') {
-			return 'empty';
-		} else if(dataNames.indexOf(name) >= 0) {
-			return 'duplicated';
-		}
-		this.data.push({id: name, name: name});
-		this.save();
-		return 'success';
-	},
-	update(id, name) {
-		const idList = this.data.map((item) => item.id);
-		if(idList.indexOf(id) >= 0) {
-			const names = this.data.map((item) => item.name);
-			if(names.indexOf(name) >= 0) {
-				return 'duplicated';
-			} else {
-				const tag = this.data.filter((item) => item.id === id)[0];
-				tag.name = name;
-				this.save();
-				return 'success';
-			}
+const tagsModel = {
+	iconMap,
+	iconList,
+	searchIcon(name: string): string {
+		const item = this.iconMap.find(i => i.name === name);
+		console.log(item);
+		if(item) {
+			return item.icon_name;
 		} else {
-			return 'not found';
+			return 'default';
 		}
 	},
-	remove(id: string) {
-		let index = -1;
-		for(let i=0; i<this.data.length; i++) {
-			if(this.data[i].id ===id) {
-			index = i;
-			break;
-			}
-		}
-		this.data.splice(index,1);
-		this.save();
-	}
+
 }
 
 export { tagsModel };

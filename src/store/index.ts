@@ -1,16 +1,28 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import createId from '@/models/createId';
+import { tagsModel } from '@/models/tagsModel';
 
 Vue.use(Vuex)
 
-const tagBasic: Tag[] = [
-	{id: '1', name:'美食'}, 
-	{id: '2', name:'住宿'}, 
-	{id: '3', name:'出行'}, 
-	{id: '4', name:'衣妆'}, 
-	{id: '5', name:'娱乐'}
-]
+const tagBasic_out: Tag[] = [
+	{id: '1', name:'餐饮', icon:'can_yin'}, 
+	{id: '2', name:'住宿', icon:'zhu_shu'}, 
+	{id: '3', name:'出行', icon:'chu_xing'}, 
+	{id: '4', name:'衣妆', icon:'yi_zhuang'}, 
+	{id: '5', name:'娱乐', icon:'yu_le'},
+	{id: '6', name:'日用', icon:'ri_yong'},
+];
+const tagBasic_in: Tag[] = [
+	{id: '1', name:'工资', icon:'gong_zi'}, 
+	{id: '2', name:'奖金', icon:'jiang_jin'}, 
+	{id: '3', name:'营业', icon:'ying_ye'}, 
+	{id: '4', name:'兼职', icon:'jian_zhi'}, 
+	{id: '5', name:'报销', icon:'bao_xiao'},
+	{id: '6', name:'投资', icon:'tou_zi'},
+	{id: '7', name:'零花', icon:'ling_hua'},
+];
+
 function clone<T>(data: T): T {
   return JSON.parse(JSON.stringify(data));
 }
@@ -19,7 +31,11 @@ const store = new Vuex.Store({
   state: {
     recordList: [] as RecordData[],
     tagList: [] as Tag[],
+    tagListIn: [] as Tag[],
     currentTag: null as Tag | null,
+  },
+  getters: {
+    fetchTagsIn: (state) => tagBasic_in,
   },
   mutations: {
     // recordModel part
@@ -39,12 +55,13 @@ const store = new Vuex.Store({
     // tagsModel part
     fetchTags(state) {
       state.tagList = JSON.parse(window.localStorage.getItem('tagList') || '[]');
-      if(state.tagList.length === 0) {state.tagList = tagBasic}
+      if(state.tagList.length === 0) {state.tagList = tagBasic_out}
     },
+
     saveTags(state) {
       window.localStorage.setItem('tagList', JSON.stringify(state.tagList));
     },
-    createTags(state, name) {
+    createTags(state, {name, icon = ''}) {
       const dataNames = state.tagList.map((item) => item.name);
     // 成功和失败有返回值，失败返回原因，1重复
       if(!name) {
@@ -55,7 +72,8 @@ const store = new Vuex.Store({
         return;
       }
       const id = createId().toString();
-      state.tagList.push({id: id, name: name});
+      if(icon === '') {icon = tagsModel.searchIcon(name)}
+      state.tagList.push({ id: id, name: name, icon:icon });
       store.commit('saveTags');
     },
     updateTags(state,payload: {id: string, name: string}) {

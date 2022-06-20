@@ -34,6 +34,7 @@
     font-size: 24px;
     font-weight: 400;
     overflow-x: auto;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
     >li {
       cursor: pointer;
       flex: 1;

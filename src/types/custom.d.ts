@@ -9,6 +9,7 @@ declare	type RecordData = {
 type Tag = {
 	id: string
 	name: string
+	icon: string
 }
 type tagsModel = {
 	data: Tag[]

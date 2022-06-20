@@ -1,7 +1,7 @@
 const intervalList = Object.freeze([
-	{text: '按天', value: 'day'},
-	{text: '按月', value: 'month'},
-	{text: '按年', value: 'year'}
+	{text: '日计', value: 'day'},
+	{text: '月计', value: 'month'},
+	{text: '年度', value: 'year'}
 ]);
 
 export default intervalList;

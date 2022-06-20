@@ -1,12 +1,17 @@
 <template>
   <div class="tags">
     <ul class="tag-list">
-      <li class="new">
-        <div @click="newTag">新增标签</div>
-      </li>
       <li v-for="tag in dataTags" :key="tag.id"
       :class="selectedTag === tag.name ? 'selected':''"
-      @click="toggle(tag)">{{tag.name}}</li>
+      @click="toggle(tag)">
+      <span>{{tag.name}}</span>
+      <!-- <Icon name="" /> -->
+      </li>
+      <li v-if="add" class="new">
+        <router-link to="./labels/add">
+          <span>新增标签</span>
+        </router-link>
+      </li>
     </ul>
   </div>
 </template>
@@ -18,6 +23,7 @@
 	@Component
 	export default class Tags extends Vue {
 		@Prop(Array) readonly dataTags!: Tag[];
+		@Prop({default: true}) readonly add!: boolean;
 		
 		selectedTag = '';
 
@@ -29,14 +35,14 @@
 			}
 			this.$emit('update:tag', this.selectedTag);
 		}
-		newTag(): void {
-			const name = window.prompt('请输入新标签名');
-			if(!name) {
-				window.alert('标签为空！');
-			} else if(this.dataTags) {
-				this.$store.commit('createTags', name);
-			}
-		}
+		// newTag(): void {
+		// 	const name = window.prompt('请输入新标签名');
+		// 	if(!name) {
+		// 		window.alert('标签为空！');
+		// 	} else if(this.dataTags) {
+		// 		this.$store.commit('createTags', {name: name});
+		// 	}
+		// }
 
 	}
 </script>
@@ -72,20 +78,28 @@
       flex-wrap: wrap;
       > li {
         cursor: pointer;
-        $bg: #f5f5f5;
+        $bg: #fefefe;
         background: $bg;
         $h: 60px;
         height: $h;
         width: calc(25% - 20px);
         text-overflow: ellipsis;
         line-height: $h;
+        border: 1px solid #e0e0e0;
         border-radius: $h/4;
         padding: 0px 10px;
         margin-top: 6px;
         margin-left: 10px;
         margin-right: 10px;
+        overflow: hidden;
         &.selected {
-          background: #fee101;
+          background: #ffe4b5;
+        }
+        &.new {
+          padding: 0;
+          > a {
+            display: block;
+          }
         }
       }
     }

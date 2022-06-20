@@ -45,6 +45,10 @@ const routes: Array<RouteConfig> = [
     component: EditLabel,
   },
   {
+    path: '/labels/add',
+    component: EditLabel,
+  },
+  {
     path: '*',
     component: NotFound,
   },

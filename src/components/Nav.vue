@@ -53,7 +53,7 @@
     .item {
       display: block;
       padding: 6px 0;
-      color: #ececec;
+      color: #333;
     }
     .text {
       padding-top: 2px;
@@ -65,13 +65,13 @@
     width: 2rem;
     height: 2rem;
     vertical-align: -0.45rem;
-    fill: #ececec;
+    fill: #5b3611;
     overflow: hidden;
   }
   .item.selected {
-    color: #5b3611;
+    color: #ececec;
     > svg {
-      fill: #5b3611;
+      fill: #ececec;
     }
   }
 }

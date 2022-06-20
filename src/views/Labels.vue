@@ -1,40 +1,56 @@
 <template>
 	<wrapper :style="{height:h+'px'}">
-		<ul class="tags">
+		<Types class="header" type="-" @update:type="updateType" />
+		<ul v-if="type === '-'" class="tags">
 			<li v-for="tag in tags" :key="tag.id">
+				<router-link :to="`./labels/edit/${tag.id}`" class="tag">
+					<span>{{tag.name}}</span>
+					<Icon name="right-tangle" />
+				</router-link>
+			</li>
+			<li class="createTag">
+				<router-link to="./labels/add">
+				<span>新建标签</span>
+				</router-link>
+				<!-- <Icon name="plus" /> -->
+			</li>
+		</ul>
+		<ul v-else class="tags">
+			<li v-for="tag in tagsIn" :key="tag.id">
 				<router-link :to="`./labels/edit/${tag.id}`" class="tag">
 					<span>{{tag.name}}</span>
 					<Icon name="right-tangle" />
 				</router-link>			
 			</li>
 		</ul>
-		<div class="buttonWrapper">
-			<AddButton @click="createTag" class="createTag">新建标签</AddButton>
-		</div>
 	</wrapper>
 </template>
 
 <script lang="ts">
 	import Vue from 'vue'
+	import Types from '@/components/Types.vue';
 	import { Component } from 'vue-property-decorator'
 
-	@Component
+	@Component({
+		components: {Types},
+	})
 	export default class Labels extends Vue {
 
 		h = document.documentElement.clientHeight;
+		type = '-';
 
 		get tags(): Tag[] | null {
 			return this.$store.state.tagList;
+		}
+		get tagsIn(): Tag[] {
+			return this.$store.getters.fetchTagsIn;
 		}
 		
 		beforeCreate(): void {
 			this.$store.commit('fetchTags');
 		}
-		createTag(): void {
-			const name = window.prompt('请输入标签名：');
-			if(name !== null) {
-				this.$store.commit('createTags', name);
-			}
+		updateType(value: string): void {
+			this.type = value;
 		}
 	}
 </script>
@@ -44,7 +60,7 @@
 		background: #fff;
 		font-size: 16px;
 		padding-left: 20px;
-		margin-top: 10px;
+		margin-top: 2px;
 		>li {
 			border-bottom: 1px solid #e6e6e6;
 			list-style: none;

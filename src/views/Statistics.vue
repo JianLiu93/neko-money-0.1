@@ -9,7 +9,9 @@
 		</div>
 		<div class="data-list">
 		<ul class="group-list">
-			<li v-if="groupList.length === 0"><h3>目前没有记录</h3></li>
+			<li v-if="groupList.length === 0">
+				<div class="none">目前没有记录</div>
+			</li>
 			<li v-for="(group, index) in groupList" :key="index">
 				<h3 class="title" v-if="interval === 'day'">{{dayTitle(group.title)}}</h3>
 				<h3 class="title" v-if="interval === 'month'">{{monthTitle(group.title)}}</h3>
@@ -228,10 +230,10 @@
 <style lang="scss" scoped>
 	.top ::v-deep {
 		.tabs {
-		margin-top: 2px;
 		.interval-item {
 			height: 40px;
-			background: #fff;
+			background: #ffeab9;
+			// #d6e7aa
 			&.selected {
 				background: #fdab90;
 				&::after {
@@ -243,6 +245,7 @@
 	}
 	.chart-wrapper {
       height: 280px;
+      background: #fff;
       &::v-deep .wrapper {
         height: 270px;
       }
@@ -267,6 +270,9 @@
 		margin-right: auto;
 		margin-left: 8px;
 		color: #aaa;
+	}
+	.none {
+		margin-top: 20px;
 	}
 	@mixin scroll {
 		&::-webkit-scrollbar {

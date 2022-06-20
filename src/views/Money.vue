@@ -2,7 +2,8 @@
   <div id="money">
     <wrapper :style="{height:h+'px'}">
 	<Types class="header" type="-" @update:type="onUpdateType" />
-	<Tags :data-tags="tags" @update:tag="onUpdateTag" />
+	<Tags v-if="record.type === '-'" :data-tags="tags" @update:tag="onUpdateTag" />
+	<Tags v-else :data-tags="tagsIn" :add="false" @update:tag="onUpdateTag" />
 	<div class="page-bottom">
       <div class="notes">
       <Notes class="note-bar" @update:value="onUpdateNote"
@@ -37,6 +38,9 @@
 		
 		get tags(): Tag[] | null {
 			return this.$store.state.tagList;
+		}
+		get tagsIn(): Tag[] {
+			return this.$store.getters.fetchTagsIn;
 		}
 
 		record: RecordData = {
