@@ -3,7 +3,7 @@
 		<Types class="header" type="-" @update:type="updateType" />
 		<ul v-if="type === '-'" class="tags">
 			<li v-for="tag in tags" :key="tag.id">
-				<router-link :to="`./labels/edit/${tag.id}`" class="tag">
+				<router-link :to="{path:'/statistics', query:{id:'year'}}" class="tag">
 					<span>{{tag.name}}</span>
 					<Icon name="right-tangle" />
 				</router-link>
@@ -17,7 +17,7 @@
 		</ul>
 		<ul v-else class="tags">
 			<li v-for="tag in tagsIn" :key="tag.id">
-				<router-link :to="`./labels/edit/${tag.id}`" class="tag">
+				<router-link :to="{path:'/statistics', query:{id:'year'}}" class="tag">
 					<span>{{tag.name}}</span>
 					<Icon name="right-tangle" />
 				</router-link>			

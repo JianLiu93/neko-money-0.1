@@ -7,6 +7,7 @@ import Nav from '@/components/Nav.vue'
 import Wrapper from '@/components/Wrapper.vue'
 import Icon from '@/components/Icon.vue'
 import AddButton from '@/components/AddButton.vue'
+import Component from 'vue-class-component'
 
 Vue.config.productionTip = false
 
@@ -14,6 +15,12 @@ Vue.component('Nav', Nav)
 Vue.component('Wrapper', Wrapper)
 Vue.component('Icon', Icon)
 Vue.component('AddButton', AddButton)
+
+Component.registerHooks([
+  'beforeRouteEnter',
+  'beforeRouteLeave',
+  'beforeRouteUpdate'     
+ ])
 
 new Vue({
   router: router,

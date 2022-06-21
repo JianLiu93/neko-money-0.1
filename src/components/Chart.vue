@@ -25,14 +25,14 @@
 			this.chart.setOption(this.options);	
 		}
 
-		@Watch('options')
+		@Watch('options', {immediate: true})
 		onOptionsChange(newVal: EChartsOption): void {
 			if(this.chart) {
+				this.chart.clear();
 				this.chart.setOption(newVal);
 			}
 		}
-		@Watch('resize')
-		onWidthChange(): void {
+		resizeChart(): void {
 			if(this.chart) {
 				this.chart.resize();
 				this.$emit('onScroll', 1);

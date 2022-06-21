@@ -4,7 +4,7 @@
 		<Types class-prefix="type" type="-" @update:type="updateType"/>
 		<Tabs class-prefix="interval" :data-source="intervalList" :value.sync="interval" />
 		<div class="chart-wrapper" ref="chartWrapper">
-			<Chart class="chart" :options="dataMap" :resize="interval" @onScroll="scrollChart" />
+			<Chart class="chart" ref="charts" :options="dataMap" style="width:420%" @onScroll="scrollChart" />
 		</div>
 		</div>
 		<div class="data-list">
@@ -13,10 +13,10 @@
 				<div class="none">目前没有记录</div>
 			</li>
 			<li v-for="(group, index) in groupList" :key="index">
-				<h3 class="title" v-if="interval === 'day'"><i>{{dayTitle(group.title)}}</i>    <i class="total">￥{{group.total}}</i></h3>
-				<h3 class="title" v-if="interval === 'month'"><i>{{monthTitle(group.title)}}</i><i class="total">￥{{group.total}}</i></h3>
-				<h3 class="title" v-if="interval === 'year'"><i>{{yearTitle(group.title)}}</i>  <i class="total">￥{{group.total}}</i></h3>
-				<ul>
+				<h3 class="title" v-if="interval==='day'"><i>{{dayTitle(group.title)}}</i>    <i class="total">￥{{group.total}}</i></h3>
+				<h3 class="title" v-if="interval==='month'"><i>{{monthTitle(group.title)}}</i><i class="total">￥{{group.total}}</i></h3>
+				<h3 class="title" v-if="interval==='year'"><i>{{group.title}}</i>             <i class="total">￥{{group.total}}</i></h3>
+				<ul v-if="interval!=='year'">
 					<li class="record" v-for="item in group.items" :key="item.id">
 						<span>{{tagString(item.tag)}}</span>
 						<span class="notes">{{item.note}}</span>
@@ -39,8 +39,9 @@
 	import Chart from '@/components/Chart.vue';
 	import { EChartsOption } from 'echarts';
 	import _ from 'lodash';
+	import { Route } from 'vue-router';
 
-	type result = {title: string, items: RecordData[], total?: number}[];
+	type result = {title: string, items: RecordData[], total: number}[];
 	type chartData = {date: string, value: number}
 
 	function clone<T>(data: T): T {
@@ -48,22 +49,39 @@
 	}
 
 	function groupResult(newList: RecordData[], interval: OpUnitType): result {
-		if(newList.length === 0) {return [];}
-		let result: result = [{title: dayjs(newList[0].createdAt).format('YYYY-MM-DD'), items: [newList[0]]}];
+		if(newList.length === 0) return [];
+		let result: result = [{title: dayjs(newList[0].createdAt).format('YYYY-MM-DD'), items: [newList[0]], total: 0}];
 		for(let i=1; i<newList.length; i++) {
 			const current = newList[i];
 			const last = result[result.length - 1];
 			if( dayjs(last.title).isSame(dayjs(current.createdAt), interval) ) {
 				last.items.push(current);
 			} else {
-				result.push({title: dayjs(current.createdAt).format('YYYY-MM-DD'), items: [current]});
+				result.push({title: dayjs(current.createdAt).format('YYYY-MM-DD'), items: [current], total: 0});
 			}
 		}
 		result.forEach(group => {
-			group.total = group.items.reduce((sum, item) => sum + item.sum, 0);
+			group.total = group.items.reduce((sum, item) => sum + item.sum, 0) || 0;
 		});
 		result.sort((a, b) => dayjs(b.title).valueOf() - dayjs(a.title).valueOf());
-		return result;
+		if(interval !== 'year') {return result;}
+		else {
+			const record = result[0].items;
+			let tagSort: result = [{title: record[0].tag, items: [record[0]], total: 0}];
+			for(let i=1; i<record.length; i++) {
+				const current = record[i];
+				const found = tagSort.find((i) => i.title === current.tag);
+				if(found) {
+					found.items.push(current);
+				} else {
+					tagSort.push({title: current.tag, items: [current], total: 0});
+				}
+			}
+			tagSort.forEach(group => {
+				group.total = group.items.reduce((sum, item) => sum + item.sum, 0) || 0;
+			});
+			return tagSort;
+		}
 	}
 
 
@@ -123,17 +141,24 @@
 						date: dateStr, value: (found ? found.total: 0) || 0
 					});
 				}
+			} else {
+				for(let r of this.groupList) {
+					array.push({
+						date: r.title, value: r.total
+					});
+				}
+				return array;
 			}
 			array.sort((a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf());
 			return array;
 		}
 
-		get dataMap(): EChartsOption {
+		get dataMap(): unknown {
 			const keys = this.chartArray.map(item => item.date);
 			const values = this.chartArray.map(item => (item.value || 0).toString());
 			const {interval} = this;
 
-			return {
+			const optionTime = {
 			grid: {
 				left: 0,
 				right: 0,
@@ -145,13 +170,14 @@
 			xAxis: {
 			type: 'category',
 			data: keys,
+			boundaryGap: true,
 			axisTick: { alignWithLabel: true },
 			axisLine: { lineStyle: {color: 'red'} },
 			axisLabel: {
-				formatter: function(value:string): string {
+				formatter: function(value: string): string {
 					if(interval === 'day') {return value.substr(5);}
 					if(interval === 'month') {return value.substr(5) + '月';}
-					else {return value.substr(5);}
+					else {return value;}
 				}
 			}
 			},
@@ -171,10 +197,52 @@
 			}],
 			tooltip: {
 				show: true, triggerOn: 'click',
-				formatter: '{c}',
+				formatter: '￥{c}',
 				position: 'top',
 			},
 			};
+
+			const chartSort = this.chartArray.map(item => {
+				return {name: item.date, value: item.value}
+			});
+
+			const optionSort = {
+				title: {
+					text: '年度统计',
+					left: 'center',
+				},
+				tooltip: {
+					trigger: 'item'
+				},
+				series: [
+					{
+						// name: '花费',
+						label: {
+							position: 'outside',
+							formatter: '{b}' // 设置标签格式
+						},
+						type: 'pie',
+						radius: ['40%', '70%'],
+						center: ['50%', '58%'],
+						clockwise: true,
+						data: [...chartSort],
+						emphasis: {
+							itemStyle: {
+								shadowBlur: 10,
+								shadowOffsetX: 0,
+								shadowColor: 'rgba(0, 0, 0, 0.5)'
+							}
+						},
+						tooltip: {
+							show: true, triggerOn: 'click',
+							formatter: '￥{c}, {d}%',
+							position: 'top',
+						},
+					}
+				]
+		};
+			if(interval === 'year') {return optionSort;}
+			else {return optionTime;}
 		}
 		// computed
 
@@ -186,7 +254,18 @@
 		mounted(): void {
 			const div = this.$refs.chartWrapper as HTMLDivElement;
 			div.scrollLeft = div.scrollWidth;
+			(this.$refs.charts as any).resizeChart();
+			// const chart= document.querySelector('.chart') as HTMLDivElement;
+			// const width = window.getComputedStyle(chart).width.slice(0, -2);
 		}
+		// 组件内定义路由导航守卫
+		// beforeRouteEnter(to: Route, from: Route, next: any): void {
+		// 	console.log('before route update');
+		// 	if(to.query.id) {
+		// 		this.interval = to.query.id as OpUnitType;
+		// 	}
+		// 	next();
+		// }
 		// 生命周期钩子
 
 		// 绑定事件
@@ -225,17 +304,6 @@
 				return day.format('YYYY年M月');
 			}
 		}
-		yearTitle(string: string): string {
-			const day = dayjs(string);
-			const now = dayjs();
-			if(day.isSame(now, 'year')) {
-				return '本年';
-			} else if(day.isSame(now.subtract(1,'month'), 'month')) {
-				return '去年';
-			} else {
-				return day.format('YYYY年');
-			}
-		}
 		scrollChart(): void {
 			const div = this.$refs.chartWrapper as HTMLDivElement;
 			div.scrollLeft = div.scrollWidth;
@@ -246,16 +314,18 @@
 		@Watch('interval')
 		onIntervalChange(): void {
 			const chart= document.querySelector('.chart') as HTMLDivElement;
-			const app = document.querySelector('#app') as HTMLDivElement;
-			const width = window.getComputedStyle(app).width.slice(0, -2);
 			let chartWidth = '';
-			// if(this.interval === 'day') {chartWidth = `${Number(width)*4.2}px`}
-			// else if(this.interval === 'month') {chartWidth = `${Number(width)*2}px`}
-			// else {chartWidth = `${width}px`}
 			if(this.interval === 'day') {chartWidth = '420%'}
 			else if(this.interval === 'month') {chartWidth = '200%'}
 			else {chartWidth = '100%'}
 			chart.style.width = chartWidth;
+			(this.$refs.charts as any).resizeChart();
+		}
+		@Watch('$route.query', {immediate: true})
+		routeWatch(): void {
+			if(this.$route.query.id) {
+				this.interval = this.$route.query.id as OpUnitType;
+			}
 		}
 	}
 </script>

@@ -6,7 +6,7 @@
 	<Tags v-else :data-tags="tagsIn" :add="false" @update:tag="onUpdateTag" />
 	<div class="page-bottom">
       <div class="notes">
-      <Notes class="note-bar" @update:value="onUpdateNote"
+      <Notes class="note-bar" ref="note" @update:value="onUpdateNote"
       field-name="备注" placeholder="请在这里输入简要备注"/>
       </div>
       <DateBar class="date-bar" :value.sync="record.createdAt"
@@ -74,6 +74,7 @@
 			} else {
 				this.$store.commit('createRecords',this.record);
 				(this.$refs.Calculator as any).clear();
+				(this.$refs.note as any).note = '';
 			}
 		}
 	}
