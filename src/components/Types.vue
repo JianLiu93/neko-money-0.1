@@ -45,6 +45,8 @@
     font-size: 24px;
     font-weight: 400;
     overflow-x: auto;
+    caret-color: transparent;
+
     @media (max-width: 500px) {
       &::-webkit-scrollbar {
         display: none;

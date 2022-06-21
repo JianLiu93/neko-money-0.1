@@ -31,8 +31,7 @@ const store = new Vuex.Store({
   state: {
     recordList: [] as RecordData[],
     tagList: [] as Tag[],
-    tagListIn: [] as Tag[],
-    currentTag: null as Tag | null,
+    currentTag: null as (Tag | null),
   },
   getters: {
     fetchTagsIn: (state) => tagBasic_in,

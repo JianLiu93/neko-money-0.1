@@ -14,6 +14,7 @@
 	@Component
 	export default class Chart extends Vue {
 		@Prop() options?: EChartsOption;
+		@Prop() resize!: string;
 		chart?: echarts.ECharts;
 
 		mounted(): void {
@@ -28,6 +29,13 @@
 		onOptionsChange(newVal: EChartsOption): void {
 			if(this.chart) {
 				this.chart.setOption(newVal);
+			}
+		}
+		@Watch('resize')
+		onWidthChange(): void {
+			if(this.chart) {
+				this.chart.resize();
+				this.$emit('onScroll', 1);
 			}
 		}
 	}

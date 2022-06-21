@@ -58,6 +58,7 @@
     flex-wrap: wrap;
     display: flex;
     flex-direction: column;
+    caret-color: transparent;
     @media (max-width: 500px) {
       &::-webkit-scrollbar {
         display: none;

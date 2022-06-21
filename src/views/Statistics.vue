@@ -4,7 +4,7 @@
 		<Types class-prefix="type" type="-" @update:type="updateType"/>
 		<Tabs class-prefix="interval" :data-source="intervalList" :value.sync="interval" />
 		<div class="chart-wrapper" ref="chartWrapper">
-			<Chart class="chart" :options="dataMap" />
+			<Chart class="chart" :options="dataMap" :resize="interval" @onScroll="scrollChart" />
 		</div>
 		</div>
 		<div class="data-list">
@@ -13,9 +13,9 @@
 				<div class="none">目前没有记录</div>
 			</li>
 			<li v-for="(group, index) in groupList" :key="index">
-				<h3 class="title" v-if="interval === 'day'">{{dayTitle(group.title)}}</h3>
-				<h3 class="title" v-if="interval === 'month'">{{monthTitle(group.title)}}</h3>
-				<h3 class="title" v-if="interval === 'year'">{{yearTitle(group.title)}}</h3>
+				<h3 class="title" v-if="interval === 'day'"><i>{{dayTitle(group.title)}}</i>    <i class="total">￥{{group.total}}</i></h3>
+				<h3 class="title" v-if="interval === 'month'"><i>{{monthTitle(group.title)}}</i><i class="total">￥{{group.total}}</i></h3>
+				<h3 class="title" v-if="interval === 'year'"><i>{{yearTitle(group.title)}}</i>  <i class="total">￥{{group.total}}</i></h3>
 				<ul>
 					<li class="record" v-for="item in group.items" :key="item.id">
 						<span>{{tagString(item.tag)}}</span>
@@ -32,7 +32,7 @@
 <script lang="ts">
 	import Vue from 'vue'
 	import dayjs, { OpUnitType } from 'dayjs'
-	import { Component } from 'vue-property-decorator'
+	import { Component, Watch } from 'vue-property-decorator'
 	import Types from '@/components/Types.vue';
 	import Tabs from '@/components/Tabs.vue';
 	import intervalList from '@/constants/intervalList';
@@ -41,6 +41,7 @@
 	import _ from 'lodash';
 
 	type result = {title: string, items: RecordData[], total?: number}[];
+	type chartData = {date: string, value: number}
 
 	function clone<T>(data: T): T {
 		return JSON.parse(JSON.stringify(data));
@@ -48,7 +49,7 @@
 
 	function groupResult(newList: RecordData[], interval: OpUnitType): result {
 		if(newList.length === 0) {return [];}
-		const result: result = [{title: dayjs(newList[0].createdAt).format('YYYY-MM-DD'), items: [newList[0]]}];
+		let result: result = [{title: dayjs(newList[0].createdAt).format('YYYY-MM-DD'), items: [newList[0]]}];
 		for(let i=1; i<newList.length; i++) {
 			const current = newList[i];
 			const last = result[result.length - 1];
@@ -61,6 +62,7 @@
 		result.forEach(group => {
 			group.total = group.items.reduce((sum, item) => sum + item.sum, 0);
 		});
+		result.sort((a, b) => dayjs(b.title).valueOf() - dayjs(a.title).valueOf());
 		return result;
 	}
 
@@ -75,77 +77,7 @@
 		interval = 'day' as OpUnitType;
 		intervalList = intervalList;
 
-		get chartArray() {
-			const today = new Date();
-			const array = [];
-			for(let i=0; i<=29; i++) {
-				const dateStr = dayjs(today)
-				.subtract(i, 'day').format('YYYY-MM-DD');
-				const found = _.find(this.groupList, {
-					title: dateStr
-				});
-				array.push({
-					date: dateStr, value: found ? found.total: 0
-				});
-			}
-			array.sort((a, b) => {
-				if(a.date > b.date) {
-					return 1;
-				} else if(a.date === b.date) {
-					return 0;
-				} else {
-					return -1;
-				}
-			});
-			return array;
-		}
-
-		get dataMap(): EChartsOption {
-			const keys = this.chartArray.map(item => item.date);
-			const values = this.chartArray.map(item => (item.value || 0).toString());
-			console.log('values', values);
-
-			return {
-			grid: {
-				left: 0,
-				right: 0,
-				top: 60,
-				bottom: 10,
-				containLabel: true
-			},
-
-			xAxis: {
-			type: 'category',
-			data: keys,
-			axisTick: { alignWithLabel: true },
-			axisLine: { lineStyle: {color: 'red'} },
-			axisLabel: {
-				formatter: function (value:string) {
-					return value.substr(5);
-				}
-			}
-			},
-			yAxis: {
-				type: 'value',
-				show: false
-			},
-			series: [{
-				data: values,
-				type: 'line',
-				smooth: true,
-				itemStyle: { borderWidth: 1, color: 'white', borderColor: 'red' },
-				lineStyle: { color: 'red', },
-				symbol: 'circle',
-				symbolSize: 10,
-			}],
-			tooltip: {
-				show: true, triggerOn: 'click',
-				formatter: '{c}',
-				position: 'top',
-			},
-			};
-		}
-
+		// computed
 		get recordList(): RecordData[] {
 			return this.$store.state.recordList;
 		}
@@ -168,6 +100,85 @@
 			// }
 		}
 
+		get chartArray(): chartData[] {
+			const today = new Date();
+			const array = [];
+			if(this.interval === 'day') {
+				for(let i=0; i<=29; i++) {
+					const dateStr = dayjs(today)
+					.subtract(i, 'day').format('YYYY-MM-DD');
+					const found = _.find(this.groupList, {
+						title: dateStr
+					});
+					array.push({
+						date: dateStr, value: (found ? found.total: 0) || 0
+					});
+				}
+			} else if(this.interval === 'month') {
+				for(let i=0; i<=11; i++) {
+					const dateStr = dayjs(today)
+					.subtract(i, 'month').format('YYYY-MM');
+					const found = this.groupList.find((i) => i.title.match(dateStr));
+					array.push({
+						date: dateStr, value: (found ? found.total: 0) || 0
+					});
+				}
+			}
+			array.sort((a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf());
+			return array;
+		}
+
+		get dataMap(): EChartsOption {
+			const keys = this.chartArray.map(item => item.date);
+			const values = this.chartArray.map(item => (item.value || 0).toString());
+			const {interval} = this;
+
+			return {
+			grid: {
+				left: 0,
+				right: 0,
+				top: 60,
+				bottom: 10,
+				containLabel: true
+			},
+
+			xAxis: {
+			type: 'category',
+			data: keys,
+			axisTick: { alignWithLabel: true },
+			axisLine: { lineStyle: {color: 'red'} },
+			axisLabel: {
+				formatter: function(value:string): string {
+					if(interval === 'day') {return value.substr(5);}
+					if(interval === 'month') {return value.substr(5) + '月';}
+					else {return value.substr(5);}
+				}
+			}
+			},
+			yAxis: {
+				type: 'value',
+				show: false
+			},
+			series: [{
+				data: values,
+				type: 'line',
+				smooth: true,
+				itemStyle: { borderWidth: 1, color: 'white', borderColor: 'red' },
+				lineStyle: { color: 'red', },
+				symbol: 'circle',
+				symbolSize: 10,
+				
+			}],
+			tooltip: {
+				show: true, triggerOn: 'click',
+				formatter: '{c}',
+				position: 'top',
+			},
+			};
+		}
+		// computed
+
+		// 生命周期钩子
 		beforeCreate(): void {
 			this.$store.commit('fetchRecords');
 		}
@@ -176,8 +187,9 @@
 			const div = this.$refs.chartWrapper as HTMLDivElement;
 			div.scrollLeft = div.scrollWidth;
 		}
+		// 生命周期钩子
 
-
+		// 绑定事件
 		updateType(value: string): void {
 			this.type = value;
 		}
@@ -224,6 +236,27 @@
 				return day.format('YYYY年');
 			}
 		}
+		scrollChart(): void {
+			const div = this.$refs.chartWrapper as HTMLDivElement;
+			div.scrollLeft = div.scrollWidth;
+		}
+		// 绑定事件
+
+		// watchers
+		@Watch('interval')
+		onIntervalChange(): void {
+			const chart= document.querySelector('.chart') as HTMLDivElement;
+			const app = document.querySelector('#app') as HTMLDivElement;
+			const width = window.getComputedStyle(app).width.slice(0, -2);
+			let chartWidth = '';
+			// if(this.interval === 'day') {chartWidth = `${Number(width)*4.2}px`}
+			// else if(this.interval === 'month') {chartWidth = `${Number(width)*2}px`}
+			// else {chartWidth = `${width}px`}
+			if(this.interval === 'day') {chartWidth = '420%'}
+			else if(this.interval === 'month') {chartWidth = '200%'}
+			else {chartWidth = '100%'}
+			chart.style.width = chartWidth;
+		}
 	}
 </script>
 
@@ -246,7 +279,8 @@
 	.chart-wrapper {
       height: 280px;
       background: #fff;
-      &::v-deep .wrapper {
+      &::v-deep .chart {
+		width: 420%;
         height: 270px;
       }
     }
@@ -276,7 +310,7 @@
 	}
 	@mixin scroll {
 		&::-webkit-scrollbar {
-		width: 10px;
+		width: 6px;
 		height: 10px;
 		}
 		&::-webkit-scrollbar-thumb {
@@ -287,7 +321,6 @@
 		}
 	}
 	.chart {
-		width: 420%;
 		&-wrapper {
 			overflow-x: auto;
 			@include scroll();
@@ -300,11 +333,17 @@
 		min-height: 230px;
 		overflow: auto;
 		flex-grow: 1;
-		.group-list {
-			@include scroll();
-			@media (max-width: 500px) {
-				&::-webkit-scrollbar {display: none;}
+		i {
+			font-style: normal;
+			&.total {
+			font-style: italic;
+			color: #666;
 			}
+		}
+		
+		@include scroll();
+		@media (max-width: 500px) {
+			&::-webkit-scrollbar {display: none;}
 		}
 	}
 </style>
