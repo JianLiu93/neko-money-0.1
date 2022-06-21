@@ -55,8 +55,9 @@
 		}
 
 		add(): void {
-			if(this.tag) {
-			this.$store.commit('createTags', {name: this.inputTag.name});
+			if(this.inputTag.name) {
+				this.$store.commit('createTags', { name: this.inputTag.name, icon: this.inputTag.icon });
+				this.goBack();
 			}
 		}
 		customTag(): void {
@@ -65,6 +66,7 @@
 			} else {
 				this.inputTag.name = prompt('请输入新的名称：') || 'default';
 				this.$store.commit('createTags', { name: this.inputTag.name, icon: this.inputTag.icon });
+				this.goBack();
 			}
 		}
 

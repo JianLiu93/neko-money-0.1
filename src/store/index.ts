@@ -7,9 +7,9 @@ Vue.use(Vuex)
 
 const tagBasic_out: Tag[] = [
 	{id: '1', name:'餐饮', icon:'can_yin'}, 
-	{id: '2', name:'住宿', icon:'zhu_shu'}, 
+	{id: '2', name:'住宿', icon:'zhu_su'}, 
 	{id: '3', name:'出行', icon:'chu_xing'}, 
-	{id: '4', name:'衣妆', icon:'yi_zhuang'}, 
+	{id: '4', name:'衣装', icon:'yi_zhuang'}, 
 	{id: '5', name:'娱乐', icon:'yu_le'},
 	{id: '6', name:'日用', icon:'ri_yong'},
 ];
@@ -96,14 +96,9 @@ const store = new Vuex.Store({
         return;
       }
     },
-    removeTags(state, id: string) {
-      let index = -1;
-      for(let i=0; i<state.tagList.length; i++) {
-        if(state.tagList[i].id ===id) {
-        index = i;
-        break;
-        }
-      }
+    removeTags(state, name: string) {
+      const dataNames = state.tagList.map((item) => item.name);
+      const index = dataNames.indexOf(name);
       if(index >= 0) {
         state.tagList.splice(index,1);
         store.commit('saveTags');

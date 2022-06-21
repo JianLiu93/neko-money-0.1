@@ -81,6 +81,7 @@
 </script>
 
 <style lang="scss" scoped>
+@import "~@/assets/style/unit.scss";
 #money {
 	// #f1d3a7 #ffeab9 #ffb70e #d6843c #fcb577 #fdab90 #fe8867
 	background: #fff;
@@ -90,6 +91,9 @@
 	}
 	&::v-deep .wrapper>.content {
 		justify-content: space-between;
+	}
+	.tags {
+		@extend %innerShadow;
 	}
 }
 </style>

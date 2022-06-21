@@ -4,11 +4,13 @@
       <li v-for="tag in dataTags" :key="tag.id"
       :class="selectedTag === tag.name ? 'selected':''"
       @click="toggle(tag)">
+      <span><Icon :name="tag.icon" /></span>
       <span>{{tag.name}}</span>
       <!-- <Icon name="" /> -->
       </li>
       <li v-if="add" class="new">
         <router-link to="./labels/add">
+          <span><Icon name="add" /></span>
           <span>新增标签</span>
         </router-link>
       </li>
@@ -50,7 +52,7 @@
 <style lang="scss" scoped>
   .tags {
     background-color: #fff;
-    height: 200px;
+    min-height: 200px;
     overflow: auto;
     font-size: 12px;
     padding: 2px 10px;
@@ -85,7 +87,6 @@
         height: $h;
         width: calc(25% - 20px);
         text-overflow: ellipsis;
-        line-height: $h;
         border: 1px solid #e0e0e0;
         border-radius: $h/4;
         padding: 0px 10px;
@@ -93,14 +94,30 @@
         margin-left: 10px;
         margin-right: 10px;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
         &.selected {
           background: #ffe4b5;
         }
         &.new {
           padding: 0;
           > a {
-            display: block;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            svg {fill: #555;}
           }
+        }
+        >span {
+          display: inline-block;
+        }
+        svg {
+          width: 1.5rem;
+          height: 1.5rem;
+          fill: #7d5744;
+          overflow: hidden;
         }
       }
     }

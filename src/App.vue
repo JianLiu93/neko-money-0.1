@@ -19,7 +19,7 @@ body::-webkit-scrollbar{
   text-align: center;
   color: #333;
   line-height: 1.5;
-  background: #f6f6f6;
+  // background: #f6f6f6;
   max-width: 600px;
   margin: 0 auto;
 }

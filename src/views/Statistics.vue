@@ -38,8 +38,8 @@
 	import intervalList from '@/constants/intervalList';
 	import Chart from '@/components/Chart.vue';
 	import { EChartsOption } from 'echarts';
-	import _ from 'lodash';
 	import { Route } from 'vue-router';
+	import _ from 'lodash';
 
 	type result = {title: string, items: RecordData[], total: number}[];
 	type chartData = {date: string, value: number}
@@ -323,6 +323,9 @@
 		}
 		@Watch('$route.query', {immediate: true})
 		routeWatch(): void {
+			if(this.$route.query.type === '+') {
+				this.type = '+';
+			}
 			if(this.$route.query.id) {
 				this.interval = this.$route.query.id as OpUnitType;
 			}
