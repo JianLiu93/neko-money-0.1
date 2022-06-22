@@ -8,6 +8,8 @@ import Wrapper from '@/components/Wrapper.vue'
 import Icon from '@/components/Icon.vue'
 import AddButton from '@/components/AddButton.vue'
 import Component from 'vue-class-component'
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 
 Vue.config.productionTip = false
 
@@ -15,6 +17,7 @@ Vue.component('Nav', Nav)
 Vue.component('Wrapper', Wrapper)
 Vue.component('Icon', Icon)
 Vue.component('AddButton', AddButton)
+Vue.use(ElementUI)
 
 Component.registerHooks([
   'beforeRouteEnter',

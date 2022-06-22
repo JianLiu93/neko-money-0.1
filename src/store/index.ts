@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import createId from '@/models/createId';
 import { tagsModel } from '@/models/tagsModel';
+import { Message } from 'element-ui';
 
 Vue.use(Vuex)
 
@@ -64,10 +65,10 @@ const store = new Vuex.Store({
       const dataNames = state.tagList.map((item) => item.name);
     // 成功和失败有返回值，失败返回原因，1重复
       if(!name) {
-        window.alert('标签名为空！');
+        Message.warning('标签名为空！');
         return;
       } else if(dataNames.indexOf(name) >= 0) {
-        window.alert('标签名重复！');
+        Message.warning('标签名重复！');
         return;
       }
       const id = createId().toString();
@@ -78,21 +79,21 @@ const store = new Vuex.Store({
     updateTags(state,payload: {id: string, name: string}) {
       const {id, name} = payload;
       if(!name) {
-        window.alert('标签名为空！');
+        Message.warning('标签名为空！');
         return;
       }
       const idList = state.tagList.map((item) => item.id);
       if(idList.indexOf(id) >= 0) {
         const names = state.tagList.map((item) => item.name);
         if(names.indexOf(name) >= 0) {
-        window.alert('标签名重复！');
+        Message.warning('标签名重复！');
         } else {
           const tag = state.tagList.filter((item) => item.id === id)[0];
           tag.name = name;
           store.commit('saveTags');
         }
       } else {
-        window.alert('没有找到标签！');
+        Message.warning('没有找到标签！');
         return;
       }
     },
@@ -103,7 +104,7 @@ const store = new Vuex.Store({
         state.tagList.splice(index,1);
         store.commit('saveTags');
       } else {
-        window.alert('删除失败！');
+        Message.warning('删除失败！');
       }
     },
 

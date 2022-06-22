@@ -57,16 +57,43 @@
 		add(): void {
 			if(this.inputTag.name) {
 				this.$store.commit('createTags', { name: this.inputTag.name, icon: this.inputTag.icon });
+				this.$message.success('标签创建成功');
 				this.goBack();
+			} else {
+				this.$message.warning('未选择标签');
 			}
 		}
 		customTag(): void {
 			if(!this.inputTag.name) {
-				alert('请选择您心仪的图标!');
-			} else {
-				this.inputTag.name = prompt('请输入新的名称：') || 'default';
-				this.$store.commit('createTags', { name: this.inputTag.name, icon: this.inputTag.icon });
+			this.$prompt('请选择您心仪的图标！否则使用默认图标', '创建新标签', {
+			confirmButtonText: '确定',
+			cancelButtonText: '取消',
+			inputPattern: /^.{1,10}$/,
+			inputErrorMessage: '命名不能为空，且不能超过10个字符'
+			}).then(({ value }) => {
+				this.inputTag.name = value;
+				this.$store.commit('createTags', { name: this.inputTag.name, icon: '' });
+				this.$message.success('创建标签成功');
+			}).then(() => {
 				this.goBack();
+			}).catch(() => {
+				this.$message.info('已取消');
+			});
+			} else {
+				this.$prompt('请为标签输入新名称', '创建新标签', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				inputPattern: /^.{1,10}$/,
+				inputErrorMessage: '命名不能为空，且不能超过10个字符'
+				}).then(({ value }) => {
+					this.inputTag.name = value;
+					this.$store.commit('createTags', { name: this.inputTag.name, icon: this.inputTag.icon });
+					this.$message.success('创建标签成功');
+				}).then(() => {
+					this.goBack();
+				}).catch(() => {
+					this.$message.info('已取消');
+				});
 			}
 		}
 

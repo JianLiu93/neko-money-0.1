@@ -69,12 +69,13 @@
 		}
 		saveRecord(): void {
 			if(!this.record.tag || !this.record.note || !this.record.createdAt) {
-				window.alert('请输入完整信息！');
+				this.$message.warning('请输入完整信息，包括备注！');
 				return;
 			} else {
 				this.$store.commit('createRecords',this.record);
 				(this.$refs.Calculator as any).clear();
 				(this.$refs.note as any).note = '';
+				this.$message.success('数据录入成功');
 			}
 		}
 	}

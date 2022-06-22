@@ -36,5 +36,10 @@
 </script>
 
 <style lang="scss" scoped>
-
+	.label {
+		text-align: center;
+		>span {
+			padding: 0 20px;
+		}
+	}
 </style>

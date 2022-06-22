@@ -56,7 +56,16 @@
 			const parent = (e.currentTarget as ChildNode).parentElement as HTMLElement;
 			const name = (parent.firstChild as HTMLElement).innerText;
 			console.log(name);
-			this.$store.commit('removeTags', name);
+			this.$confirm('确定要删除吗？', '删除笔记本', {
+			confirmButtonText: '确定',
+			cancelButtonText: '取消',
+			type: 'warning'
+			}).then(() => {
+				this.$store.commit('removeTags', name);
+				this.$message.success('删除标签成功');
+			}).catch(() => {
+				this.$message.info('已取消');
+			});
 		}
 	}
 </script>

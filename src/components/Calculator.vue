@@ -10,7 +10,7 @@
 				<button @click="inputContent('2')">2</button>
 				<button @click="inputContent('3')">3</button>
 				<button @click="inputSymbol('+')">+</button>
-				<button @click="clear">清除</button>
+				<button @click="clear" class="clear">清除</button>
 			</li>
 			<li>
 				<button @click="inputContent('4')">4</button>
@@ -27,7 +27,7 @@
 				<button @click="ok" class="ok">OK</button>
 				<button @click="inputContent('0')">0</button>
 				<button @click="inputContent('.')">.</button>
-				<button @click="backspace">回退</button>
+				<button @click="backspace" class="backspace"><Icon name="backspace" /></button>
 				<button @click="inputSymbol('÷')">÷</button>
 			</li>
 		</ul>
@@ -128,11 +128,11 @@
 			if(this.output === 'error') return;
 			this.inputSymbol('=');
 			if(Number(this.output) <= 0) {
-				alert('金额为0或负值！');
+				this.$message.error('金额为0或负值！');
 				return;
 			}
 			if(Number(this.output) < 0.01) {
-				alert('金额过小！无法记录');
+				this.$message.error('金额过小！无法记录');
 				return;
 			}
 			this.output = String(Math.round(Number(this.output) *100)/100);
@@ -200,6 +200,14 @@
         }
 		&:hover {
 			background-color: #f6dab0;
+		}
+		&.clear {font-size: 20px;}
+		&.backspace {
+			>svg {
+			width: 36px;
+			height: 36px;
+			vertical-align: -8px;
+			}
 		}
       }
     }
