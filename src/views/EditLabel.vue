@@ -57,7 +57,6 @@
 		add(): void {
 			if(this.inputTag.name) {
 				this.$store.commit('createTags', { name: this.inputTag.name, icon: this.inputTag.icon });
-				this.$message.success('标签创建成功');
 				this.goBack();
 			} else {
 				this.$message.warning('未选择标签');
@@ -74,7 +73,6 @@
 			}).then(({ value }) => {
 				this.inputTag.name = value;
 				this.$store.commit('createTags', { name: this.inputTag.name, icon: '' });
-				this.$message.success('创建标签成功');
 			}).then(() => {
 				this.goBack();
 			}).catch(() => {
@@ -90,7 +88,6 @@
 				}).then(({ value }) => {
 					this.inputTag.name = value;
 					this.$store.commit('createTags', { name: this.inputTag.name, icon: this.inputTag.icon });
-					this.$message.success('创建标签成功');
 				}).then(() => {
 					this.goBack();
 				}).catch(() => {

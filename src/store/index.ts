@@ -75,6 +75,7 @@ const store = new Vuex.Store({
       if(icon === '') {icon = tagsModel.searchIcon(name)}
       state.tagList.push({ id: id, name: name, icon:icon });
       store.commit('saveTags');
+			Message.success('创建标签成功');
     },
     updateTags(state,payload: {id: string, name: string}) {
       const {id, name} = payload;
