@@ -70,6 +70,7 @@
 			cancelButtonText: '取消',
 			inputPattern: /^.{1,10}$/,
 			inputErrorMessage: '命名不能为空，且不能超过10个字符'
+			// @ts-ignore
 			}).then(({ value }) => {
 				this.inputTag.name = value;
 				this.$store.commit('createTags', { name: this.inputTag.name, icon: '' });
@@ -85,6 +86,7 @@
 				cancelButtonText: '取消',
 				inputPattern: /^.{1,10}$/,
 				inputErrorMessage: '命名不能为空，且不能超过10个字符'
+				// @ts-ignore
 				}).then(({ value }) => {
 					this.inputTag.name = value;
 					this.$store.commit('createTags', { name: this.inputTag.name, icon: this.inputTag.icon });
