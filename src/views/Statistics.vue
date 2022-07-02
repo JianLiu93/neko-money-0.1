@@ -1,7 +1,7 @@
 <template>
 	<wrapper :style="{height:h+'px'}">
 		<div class="top statistics">
-		<Types class-prefix="type" type="-" @update:type="updateType"/>
+		<Types class-prefix="type" :type="type" @update:type="updateType"/>
 		<Tabs class-prefix="interval" :data-source="intervalList" :value.sync="interval" />
 		<div class="chart-wrapper" ref="chartWrapper">
 			<Chart class="chart" ref="charts" :options="dataMap" style="width:420%" @onScroll="scrollChart" />

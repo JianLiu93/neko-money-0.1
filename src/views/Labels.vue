@@ -18,7 +18,7 @@
 		<ul v-else class="tags">
 			<li v-for="tag in tagsIn" :key="tag.id">
 				<router-link :to="{path:'/statistics', query:{type:'+', id:'year'}}" class="tag">
-					<span>{{tag.name}}</span>
+					<span>{{tag.name}}<Icon :name="tag.icon" /></span>
 					<Icon name="right-tangle" />
 				</router-link>			
 			</li>
