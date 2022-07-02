@@ -132,10 +132,10 @@
 			}
 	}
 	.edit-label {
-		margin-top: 30px;
-		margin-bottom: 30px;
+		margin-top: 10px;
+		margin-bottom: 16px;
 		.button {
-		margin: 0 40px;
+		margin: 10px 40px;
 		background: #fff0f0;
 		color: #ff5900;
 		border: 1px solid #ff5900;

@@ -38,7 +38,6 @@
 	import intervalList from '@/constants/intervalList';
 	import Chart from '@/components/Chart.vue';
 	import { EChartsOption } from 'echarts';
-	import { Route } from 'vue-router';
 	import _ from 'lodash';
 
 	type result = {title: string, items: RecordData[], total: number}[];
@@ -223,7 +222,7 @@
 						},
 						type: 'pie',
 						radius: ['40%', '70%'],
-						center: ['50%', '58%'],
+						center: ['50%', '55%'],
 						clockwise: true,
 						data: [...chartSort],
 						emphasis: {

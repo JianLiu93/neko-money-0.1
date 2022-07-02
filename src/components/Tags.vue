@@ -5,7 +5,7 @@
       :class="selectedTag === tag.name ? 'selected':''"
       @click="toggle(tag)">
       <span><Icon :name="tag.icon" /></span>
-      <span>{{tag.name}}</span>
+      <span class="text">{{tag.name}}</span>
       <!-- <Icon name="" /> -->
       </li>
       <li v-if="add" class="new">
@@ -85,14 +85,14 @@
         background: $bg;
         $h: 60px;
         height: $h;
-        width: calc(25% - 20px);
+        width: calc(25% - 12px);
         text-overflow: ellipsis;
         border: 1px solid #e0e0e0;
         border-radius: $h/4;
         padding: 0px 10px;
         margin-top: 6px;
-        margin-left: 10px;
-        margin-right: 10px;
+        margin-left: 6px;
+        margin-right: 6px;
         overflow: hidden;
         display: flex;
         flex-direction: column;
@@ -112,12 +112,16 @@
         }
         >span {
           display: inline-block;
+          max-height: 28px;
         }
         svg {
           width: 1.5rem;
           height: 1.5rem;
           fill: #7d5744;
           overflow: hidden;
+        }
+        .text {
+          max-height: 32px;
         }
       }
     }

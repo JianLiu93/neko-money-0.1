@@ -36,6 +36,19 @@ body::-webkit-scrollbar{
 // #nav {
 //   padding: 30px;
 // }
+@media screen and (max-width: 500px) {
+    .el-message {
+      min-width: 300px !important;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .el-message-box{
+      width: 300px !important;
+    }
+}
+
+
 </style>
 <script lang="ts">
 
